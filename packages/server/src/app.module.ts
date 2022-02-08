@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import * as Joi from 'joi';
 import { User } from './users/entities/users.entity';
+import { GraphQLModule } from '@nestjs/graphql';
+import { JwtModule } from './jwt/jwt.module';
 
 @Module({
   imports: [
@@ -21,6 +23,17 @@ import { User } from './users/entities/users.entity';
         PRIVATE_KEY: Joi.string().required(),
       }),
     }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+      installSubscriptionHandlers: true,
+      // introspection: true,
+      context: ({ req, connection }) => {
+        const TOKEN_KEY = 'x-jwt';
+        return {
+          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+        };
+      },
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -31,6 +44,9 @@ import { User } from './users/entities/users.entity';
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
       entities: [User],
+    }),
+    JwtModule.forRoot({
+      privateKey: process.env.PRIVATE_KEY,
     }),
     UsersModule,
   ],
