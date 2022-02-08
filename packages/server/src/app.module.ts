@@ -6,6 +6,7 @@ import * as Joi from 'joi';
 import { User } from './users/entities/users.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from './jwt/jwt.module';
+import { DbsModule } from './dbs/dbs.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { JwtModule } from './jwt/jwt.module';
       privateKey: process.env.PRIVATE_KEY,
     }),
     UsersModule,
+    DbsModule,
   ],
   controllers: [],
   providers: [],
