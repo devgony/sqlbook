@@ -7,6 +7,7 @@ import { User } from './users/entities/users.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from './jwt/jwt.module';
 import { DbsModule } from './dbs/dbs.module';
+import { Db } from './dbs/entities/dbs.entity';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { DbsModule } from './dbs/dbs.module';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
-      entities: [User],
+      entities: [User, Db],
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,

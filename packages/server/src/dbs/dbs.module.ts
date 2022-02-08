@@ -9,4 +9,4 @@ import { DbsResolver } from './dbs.resolver';
   providers: [DbsResolver, DbsService],
   exports: [DbsService],
 })
-export class dbsModule {}
+export class DbsModule {}
