@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
 import * as Joi from 'joi';
+import { User } from './users/entities/users.entity';
 
 @Module({
   imports: [
@@ -28,8 +30,9 @@ import * as Joi from 'joi';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
-      entities: [],
+      entities: [User],
     }),
+    UsersModule,
   ],
   controllers: [],
   providers: [],
