@@ -1,16 +1,58 @@
-import { gql } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import type { InferGetServerSidePropsType, NextPage } from 'next';
+import { useForm } from 'react-hook-form';
 import client from '../apollo-client';
+import {
+  LoginInput,
+  LoginMutation,
+  LoginMutationVariables,
+} from '../generated/graphql';
+
+const LOGIN = gql`
+  mutation login($input: LoginInput!) {
+    login(input: $input) {
+      ok
+      token
+      error
+    }
+  }
+`;
 
 const Home = ({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  console.log(data);
+  const { register, getValues, handleSubmit, formState } = useForm<LoginInput>({
+    mode: 'onChange',
+  });
+  const onCompleted = (data: LoginMutation) => {
+    const {
+      login: { ok, token, error },
+    } = data;
+    if (ok && token) {
+      console.log(token);
+    } else {
+      console.log(error);
+    }
+  };
+  const [login, { data: loginResult, loading }] = useMutation<
+    LoginMutation,
+    LoginMutationVariables
+  >(LOGIN, { onCompleted });
+  const onSubmit = () => {
+    const { username, password } = getValues();
+    console.log(username, password);
+    login({
+      variables: {
+        input: { username, password },
+      },
+    });
+  };
   return (
-    <div className="bg-green-500">
-      <h1 className="text-blue-400">it works</h1>
-      <button className="btn">Test</button>
-    </div>
+    <form className="flex flex-col w-20" onSubmit={handleSubmit(onSubmit)}>
+      <input placeholder="username" {...register('username')} />
+      <input placeholder="password" {...register('password')} />
+      <button>login</button>
+    </form>
   );
 };
 
