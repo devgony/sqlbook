@@ -1,3 +1,3 @@
-# Mymy
+# SQLBook
 
-## MySQL in My hands
+## The Top SQL list and tuning history management service
