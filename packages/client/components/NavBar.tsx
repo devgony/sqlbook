@@ -1,20 +1,23 @@
 import { NextComponentType } from 'next';
+import Link from 'next/link';
 
 const NavBar: NextComponentType = () => {
   return (
-    <div className="w-full flex justify-between h-10">
-      <div className="bg-yellow-300">SQL Book</div>
-      <nav>
-        <ul className="flex ">
-          <li className="mr-3">TOP SQL</li>
-          <li>TUNING HISTORY</li>
-        </ul>
+    <div className="w-full flex h-10 justify-between items-center">
+      <Link href="/">
+        <a className="bg-yellow-300 ml-4 text-3xl">📖 SQL Book</a>
+      </Link>
+      <nav className="w-1/2 flex justify-around">
+        <Link href="/top-sql">
+          <a>TOP SQL</a>
+        </Link>
+        <Link href="/tuning-history">
+          <a>TUNING HISTORY</a>
+        </Link>
+        <Link href="/admin">
+          <a>ADMIN</a>
+        </Link>
       </nav>
-
-      {/* <div className="flex-1 text-center">TOP SQL</div>
-      <div className="flex-1 text-center">TOP SQL</div>
-      <div className="flex-1 text-center">TUNING HISTORY</div> */}
-      {/* <div className="flex-1 text-center">ADMIN</div> */}
     </div>
   );
 };

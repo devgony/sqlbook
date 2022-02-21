@@ -1,5 +1,7 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import type { InferGetServerSidePropsType, NextPage } from 'next';
+import { route } from 'next/dist/server/router';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import client from '../apollo-client';
 import {
@@ -8,74 +10,44 @@ import {
   LoginMutationVariables,
 } from '../generated/graphql';
 
-const LOGIN = gql`
-  mutation login($input: LoginInput!) {
-    login(input: $input) {
-      ok
-      token
-      error
-    }
-  }
-`;
-
-const Home = ({
-  data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { register, getValues, handleSubmit, formState } = useForm<LoginInput>({
-    mode: 'onChange',
-  });
-  const onCompleted = (data: LoginMutation) => {
-    const {
-      login: { ok, token, error },
-    } = data;
-    if (ok && token) {
-      console.log(token);
-    } else {
-      console.log(error);
-    }
+const Home: NextPage = () => {
+  const router = useRouter();
+  const pushTop = () => {
+    router.push('top-sql/');
   };
-  const [login, { data: loginResult, loading }] = useMutation<
-    LoginMutation,
-    LoginMutationVariables
-  >(LOGIN, { onCompleted });
-  const onSubmit = () => {
-    const { username, password } = getValues();
-    console.log(username, password);
-    login({
-      variables: {
-        input: { username, password },
-      },
-    });
+  const pushTune = () => {
+    router.push('tuning-history/');
   };
   return (
-    <form className="flex flex-col w-20" onSubmit={handleSubmit(onSubmit)}>
-      <input placeholder="username" {...register('username')} />
-      <input placeholder="password" {...register('password')} />
-      <button>login</button>
-    </form>
+    <div className="w-full h-2/3 mt-40 flex justify-around bg-gray-200 text-center ">
+      <div
+        className="bg-gray-300 w-1/3 rounded-md cursor-pointer"
+        onClick={pushTop}
+      >
+        <div className="bg-blue-300 w-full rounded-md">TOP SQL</div>
+        <ul>
+          <li>list1</li>
+          <li>list2</li>
+          <li>list3</li>
+          <li>list4</li>
+          <li>list5</li>
+        </ul>
+      </div>
+      <div
+        className="bg-gray-300 w-1/3 rounded-md cursor-pointer"
+        onClick={pushTune}
+      >
+        <div className="bg-blue-300 rounded-md">TUNING HISTORY</div>
+        <ul>
+          <li>list1</li>
+          <li>list2</li>
+          <li>list3</li>
+          <li>list4</li>
+          <li>list5</li>
+        </ul>
+      </div>
+    </div>
   );
 };
-
-export async function getServerSideProps() {
-  const { data } = await client.query({
-    query: gql`
-      query findDbs {
-        findDbs {
-          dbs {
-            id
-            password
-            name
-          }
-        }
-      }
-    `,
-  });
-
-  return {
-    props: {
-      data,
-    },
-  };
-}
 
 export default Home;
