@@ -19,12 +19,12 @@ const Home: NextPage = () => {
     router.push('tuning-history/');
   };
   return (
-    <div className="w-full h-2/3 mt-40 flex justify-around bg-gray-200 text-center ">
+    <div className="w-full h-1/3 mt-40 flex justify-around bg-gray-200 text-center ">
       <div
-        className="bg-gray-300 w-1/3 rounded-md cursor-pointer"
+        className="bg-gray-300 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
         onClick={pushTop}
       >
-        <div className="bg-blue-300 w-full rounded-md">TOP SQL</div>
+        <div className="bg-blue-300 rounded-md">TOP SQL</div>
         <ul>
           <li>list1</li>
           <li>list2</li>
@@ -34,7 +34,7 @@ const Home: NextPage = () => {
         </ul>
       </div>
       <div
-        className="bg-gray-300 w-1/3 rounded-md cursor-pointer"
+        className="bg-gray-300 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
         onClick={pushTune}
       >
         <div className="bg-blue-300 rounded-md">TUNING HISTORY</div>

@@ -1,12 +1,13 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import type { InferGetServerSidePropsType, NextPage } from 'next';
 import { useForm } from 'react-hook-form';
-import client from '../apollo-client';
+import client, { authTokenVar, isLoggedInVar } from '../apollo-client';
 import {
   LoginInput,
   LoginMutation,
   LoginMutationVariables,
 } from '../generated/graphql';
+import { LOCALSTORAGE_TOKEN } from '../utils/const';
 
 const LOGIN = gql`
   mutation login($input: LoginInput!) {
@@ -18,9 +19,7 @@ const LOGIN = gql`
   }
 `;
 
-const Login = ({
-  data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Login: NextPage = () => {
   const { register, getValues, handleSubmit, formState } = useForm<LoginInput>({
     mode: 'onChange',
   });
@@ -29,9 +28,11 @@ const Login = ({
       login: { ok, token, error },
     } = data;
     if (ok && token) {
-      console.log(token);
+      localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+      authTokenVar(token);
+      isLoggedInVar(true);
     } else {
-      console.log(error);
+      alert(error);
     }
   };
   const [login, { data: loginResult, loading }] = useMutation<
@@ -48,34 +49,26 @@ const Login = ({
     });
   };
   return (
-    <form className="flex flex-col w-20" onSubmit={handleSubmit(onSubmit)}>
-      <input placeholder="username" {...register('username')} />
-      <input placeholder="password" {...register('password')} />
-      <button>login</button>
-    </form>
+    <div className="h-full flex justify-center items-center">
+      <form
+        className="flex flex-col h-48 w-80 bg-gray-200 items-center justify-around"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <h1>Please Login with admin</h1>
+        <input
+          className="h-10"
+          placeholder="username"
+          {...register('username')}
+        />
+        <input
+          className="h-10"
+          placeholder="password"
+          {...register('password')}
+        />
+        <button className="btn">login</button>
+      </form>
+    </div>
   );
 };
-
-export async function getServerSideProps() {
-  const { data } = await client.query({
-    query: gql`
-      query findDbs {
-        findDbs {
-          dbs {
-            id
-            password
-            name
-          }
-        }
-      }
-    `,
-  });
-
-  return {
-    props: {
-      data,
-    },
-  };
-}
 
 export default Login;
