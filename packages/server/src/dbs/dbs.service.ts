@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
+import { sqlHist } from 'src/common/queries';
 import { Connection, createConnection, Repository } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
@@ -118,8 +119,8 @@ export class DbsService {
 
   async getTOP(): Promise<number> {
     try {
-      const result = await this.ora.query('select 1 from dual');
-      console.log(result);
+      const result = await this.ora.query(sqlHist);
+      console.log(result.length);
       return 1;
     } catch (error) {}
   }
