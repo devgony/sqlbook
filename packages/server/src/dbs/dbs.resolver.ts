@@ -1,4 +1,5 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Any } from 'typeorm';
 import { DbsService } from './dbs.service';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
@@ -31,5 +32,10 @@ export class DbsResolver {
   @Query(() => TestDbOuput)
   async testDb(@Args('input') testdbInput: TestDbInput): Promise<TestDbOuput> {
     return this.dbsService.testDb(testdbInput);
+  }
+
+  @Query(() => Int)
+  async getTOP(): Promise<number> {
+    return this.dbsService.getTOP();
   }
 }

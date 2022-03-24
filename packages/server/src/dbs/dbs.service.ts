@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
-import { createConnection, Repository } from 'typeorm';
+import { Connection, createConnection, Repository } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
@@ -14,6 +14,7 @@ export class DbsService {
   constructor(
     @InjectRepository(Db)
     private readonly dbs: Repository<Db>,
+    @InjectConnection('connOracle') private readonly ora: Connection,
   ) {}
 
   async createDB({
@@ -113,5 +114,13 @@ export class DbsService {
       errLog(__filename, error);
       return { ok: false, error: 'Could not delete DB' };
     }
+  }
+
+  async getTOP(): Promise<number> {
+    try {
+      const result = await this.ora.query('select 1 from dual');
+      console.log(result);
+      return 1;
+    } catch (error) {}
   }
 }

@@ -37,6 +37,7 @@ import { Db } from './dbs/entities/dbs.entity';
       },
     }),
     TypeOrmModule.forRoot({
+      // name: 'connMysql',
       type: 'mysql',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
@@ -46,6 +47,18 @@ import { Db } from './dbs/entities/dbs.entity';
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
       entities: [User, Db],
+    }),
+    TypeOrmModule.forRoot({
+      name: 'connOracle',
+      type: 'oracle',
+      host: process.env.ORA_HOST,
+      port: +process.env.ORA_PORT,
+      username: process.env.ORA_USERNAME,
+      password: process.env.ORA_PASSWORD,
+      serviceName: process.env.ORA_NAME,
+      synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
+      logging: true,
+      entities: [],
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
