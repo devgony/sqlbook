@@ -2,19 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
-import { sqlHist } from 'src/common/queries';
+import { querySqlHist } from 'src/common/queries';
 import { Connection, createConnection, Repository } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
+import { GatherSqlHistOutput } from './dtos/gather-sql-hist.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 import { Db } from './entities/dbs.entity';
+import { SqlHist } from './entities/sqlHist.entity';
 
 @Injectable()
 export class DbsService {
   constructor(
     @InjectRepository(Db)
     private readonly dbs: Repository<Db>,
+    @InjectRepository(SqlHist) private readonly sqlHists: Repository<SqlHist>,
     @InjectConnection('connOracle') private readonly ora: Connection,
   ) {}
 
@@ -117,11 +120,15 @@ export class DbsService {
     }
   }
 
-  async getTOP(): Promise<number> {
+  async gatherSqlHist(): Promise<GatherSqlHistOutput> {
     try {
-      const result = await this.ora.query(sqlHist);
-      console.log(result.length);
-      return 1;
-    } catch (error) {}
+      const sqlHist: SqlHist[] = await this.ora.query(querySqlHist);
+      await this.sqlHists.insert(sqlHist);
+      // await this.sqlHists.save(this.sqlHists.create(sqlHist));
+      return { ok: true };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error };
+    }
   }
 }

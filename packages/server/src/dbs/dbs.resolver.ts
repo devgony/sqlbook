@@ -4,6 +4,7 @@ import { DbsService } from './dbs.service';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
+import { GatherSqlHistOutput } from './dtos/gather-sql-hist.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 
 @Resolver()
@@ -34,8 +35,8 @@ export class DbsResolver {
     return this.dbsService.testDb(testdbInput);
   }
 
-  @Query(() => Int)
-  async getTOP(): Promise<number> {
-    return this.dbsService.getTOP();
+  @Query(() => GatherSqlHistOutput)
+  async gatherSqlHist(): Promise<GatherSqlHistOutput> {
+    return this.dbsService.gatherSqlHist();
   }
 }
