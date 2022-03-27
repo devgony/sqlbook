@@ -7,6 +7,10 @@ import { Connection, createConnection, Repository } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
+import {
+  FindSqlHistsInput,
+  FindSqlHistsOutput,
+} from './dtos/find-sql-hists.dto';
 import { GatherSqlHistOutput } from './dtos/gather-sql-hist.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 import { Db } from './entities/dbs.entity';
@@ -126,6 +130,27 @@ export class DbsService {
       await this.sqlHists.insert(sqlHist);
       // await this.sqlHists.save(this.sqlHists.create(sqlHist));
       return { ok: true };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error };
+    }
+  }
+
+  async findSqlHists({ page }: FindSqlHistsInput): Promise<FindSqlHistsOutput> {
+    const PER_PAGE = 10;
+    try {
+      const [sqlHists, totalResults] = await this.sqlHists.findAndCount({
+        skip: (page - 1) * PER_PAGE,
+        take: PER_PAGE,
+        // order: {
+        // }
+      });
+      return {
+        ok: true,
+        sqlHists,
+        totalPages: Math.ceil(totalResults / PER_PAGE),
+        totalResults,
+      };
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error };
