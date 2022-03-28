@@ -25,3 +25,15 @@ table th {
   background-color: #04aa6d;
   color: white;
 }
+
+#arrow {
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  font-style: normal;
+  opacity: 0;
+}
+
+#arrow-container:hover #arrow {
+  opacity: 2;
+}
