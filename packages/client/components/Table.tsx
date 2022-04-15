@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
@@ -112,23 +113,23 @@ const getStyles = (props, align = 'left') => [
   },
 ];
 
-const IndeterminateCheckbox = forwardRef(
-  ({ indeterminate, ...rest }: any, ref) => {
-    const defaultRef = useRef();
-    const resolvedRef = ref || defaultRef;
+// const IndeterminateCheckbox = forwardRef(
+//   ({ indeterminate, ...rest }: any, ref) => {
+//     const defaultRef = useRef();
+//     const resolvedRef = ref || defaultRef;
 
-    useEffect(() => {
-      // @ts-ignore
-      resolvedRef.current.indeterminate = indeterminate;
-    }, [resolvedRef, indeterminate]);
+//     useEffect(() => {
+//       // @ts-ignore
+//       resolvedRef.current.indeterminate = indeterminate;
+//     }, [resolvedRef, indeterminate]);
 
-    return (
-      <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
-      </>
-    );
-  },
-);
+//     return (
+//       <>
+//         <input type="checkbox" ref={resolvedRef} {...rest} />
+//       </>
+//     );
+//   },
+// );
 
 export default function Table({ columns, data }: any) {
   const defaultColumn = useMemo(
