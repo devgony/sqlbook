@@ -1,11 +1,9 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @InputType('SqlHistEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
 @Entity({ name: 'TB_SQL_HIST' })
-// @Unique(['host', 'port', 'schema'])
 export class SqlHist {
   @PrimaryGeneratedColumn()
   @Field(() => Int)

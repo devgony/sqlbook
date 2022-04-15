@@ -9,6 +9,7 @@ import { JwtModule } from './jwt/jwt.module';
 import { DbsModule } from './dbs/dbs.module';
 import { Db } from './dbs/entities/dbs.entity';
 import { SqlHist } from './dbs/entities/sqlHist.entity';
+import { SqlText } from './dbs/entities/sqlText.entity';
 
 @Module({
   imports: [
@@ -47,7 +48,7 @@ import { SqlHist } from './dbs/entities/sqlHist.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
-      entities: [User, Db, SqlHist],
+      entities: [User, Db, SqlHist, SqlText],
     }),
     TypeOrmModule.forRoot({
       name: 'connOracle',

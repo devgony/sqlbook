@@ -1,5 +1,4 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Any } from 'typeorm';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DbsService } from './dbs.service';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
@@ -9,6 +8,7 @@ import {
   FindSqlHistsOutput,
 } from './dtos/find-sql-hists.dto';
 import { GatherSqlHistOutput } from './dtos/gather-sql-hist.dto';
+import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 
 @Resolver()
@@ -42,6 +42,11 @@ export class DbsResolver {
   @Query(() => GatherSqlHistOutput)
   async gatherSqlHist(): Promise<GatherSqlHistOutput> {
     return this.dbsService.gatherSqlHist();
+  }
+
+  @Query(() => GatherSqlTextOutput)
+  async gatherSqlText(): Promise<GatherSqlTextOutput> {
+    return this.dbsService.gatherSqlText();
   }
 
   @Query(() => FindSqlHistsOutput)
