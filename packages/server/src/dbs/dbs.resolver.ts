@@ -51,8 +51,8 @@ export class DbsResolver {
 
   @Query(() => FindSqlHistsOutput)
   findSqlHists(
-    @Args('input') findSqlHistInput: FindSqlHistsInput,
+    @Args('input') findSqlHistTextsInput: FindSqlHistsInput,
   ): Promise<FindSqlHistsOutput> {
-    return this.dbsService.findSqlHists(findSqlHistInput);
+    return this.dbsService.findSqlHists(findSqlHistTextsInput);
   }
 }

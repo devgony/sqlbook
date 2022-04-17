@@ -162,6 +162,7 @@ export class DbsService {
         take: PER_PAGE,
         // order: {
         // }
+        // relations: ['SqlText'],
       });
       return {
         ok: true,

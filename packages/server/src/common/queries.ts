@@ -92,7 +92,7 @@ PHYSICAL_READ_BYTES_TOTAL, PHYSICAL_READ_BYTES_DELTA, PHYSICAL_WRITE_BYTES_TOTAL
 FROM dba_hist_sqlstat H, dba_hist_snapshot T
 WHERE H.SNAP_ID=T.SNAP_ID
 AND H.DBID=T.DBID
-AND H.SNAP_ID >= (SELECT MAX(snap_id) from dba_hist_snapshot)
+--AND H.SNAP_ID >= (SELECT MAX(snap_id) from dba_hist_snapshot)
 `;
 
 // TB_SQL_TEXT

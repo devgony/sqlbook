@@ -1,5 +1,6 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { SqlHist } from './sqlHist.entity';
 
 @InputType('SqlTextEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
@@ -14,4 +15,7 @@ export class SqlText {
   @Field(() => String)
   @Column({ type: 'text' })
   SQL_TEXT: string;
+  @OneToMany(() => SqlHist, sqlHist => sqlHist.sqlText)
+  @JoinColumn([{ name: 'DBID' }, { name: 'SQL_ID' }])
+  sqlHists: SqlHist[];
 }

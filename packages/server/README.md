@@ -8,3 +8,4 @@
 ### Issues
 
 - [] upsert VS QBuilder + orIgnore
+- [] How to remove nested ManyToOne Column?
