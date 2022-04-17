@@ -27,7 +27,7 @@ export class DbsService {
     @InjectRepository(SqlStat) private readonly sqlHists: Repository<SqlStat>,
     @InjectRepository(SqlText) private readonly sqlTexts: Repository<SqlText>,
     @InjectRepository(SqlStatText)
-    private readonly sqlHistTexts: Repository<SqlStatText>,
+    private readonly sqlStatTexts: Repository<SqlStatText>,
     @InjectConnection('connOracle') private readonly ora: Connection,
   ) {}
 
@@ -162,7 +162,7 @@ export class DbsService {
   }: FindSqlStatTextsInput): Promise<FindSqlStatTextsOutput> {
     const PER_PAGE = 10;
     try {
-      const [sqlStatTexts, totalResults] = await this.sqlHistTexts.findAndCount(
+      const [sqlStatTexts, totalResults] = await this.sqlStatTexts.findAndCount(
         {
           skip: (page - 1) * PER_PAGE,
           take: PER_PAGE,
