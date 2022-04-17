@@ -3,13 +3,13 @@ import {
   PaginationInput,
   PaginationOutput,
 } from 'src/common/dtos/pagination.dto';
-import { SqlHist } from '../entities/sqlHist.entity';
+import { SqlHistText } from '../entities/sqlHistText.entity';
 
 @InputType()
 export class FindSqlHistsInput extends PaginationInput {}
 
 @ObjectType()
 export class FindSqlHistsOutput extends PaginationOutput {
-  @Field(() => [SqlHist], { nullable: true })
-  sqlHists?: SqlHist[];
+  @Field(() => [SqlHistText], { nullable: true })
+  sqlHistTexts?: SqlHistText[];
 }

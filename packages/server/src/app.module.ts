@@ -10,6 +10,7 @@ import { DbsModule } from './dbs/dbs.module';
 import { Db } from './dbs/entities/dbs.entity';
 import { SqlHist } from './dbs/entities/sqlHist.entity';
 import { SqlText } from './dbs/entities/sqlText.entity';
+import { SqlHistText } from './dbs/entities/sqlHistText.entity';
 
 @Module({
   imports: [
@@ -48,7 +49,7 @@ import { SqlText } from './dbs/entities/sqlText.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
-      entities: [User, Db, SqlHist, SqlText],
+      entities: [User, Db, SqlHist, SqlText, SqlHistText],
     }),
     TypeOrmModule.forRoot({
       name: 'connOracle',

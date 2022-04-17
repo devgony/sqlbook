@@ -24,6 +24,7 @@ export class SqlHist {
   @Field(() => Date)
   @Column({ type: 'timestamp' })
   END_INTERVAL_TIME: number;
+
   @Field(() => Number)
   @Column({ type: 'decimal', precision: 10 })
   DBID: number;
@@ -34,16 +35,16 @@ export class SqlHist {
   @Column({ type: 'varchar', length: 20 })
   SQL_ID: number;
 
-  @Field(() => SqlText, { nullable: true })
-  @ManyToOne(() => SqlText, sqlText => sqlText.sqlHists, {
-    createForeignKeyConstraints: false,
-    eager: true,
-  })
-  @JoinColumn([
-    { name: 'DBID', referencedColumnName: 'DBID' },
-    { name: 'SQL_ID', referencedColumnName: 'SQL_ID' },
-  ])
-  sqlText: SqlText;
+  // @Field(() => SqlText, { nullable: true })
+  // @ManyToOne(() => SqlText, sqlText => sqlText.sqlHists, {
+  //   createForeignKeyConstraints: false,
+  //   eager: true,
+  // })
+  // @JoinColumn([
+  //   { name: 'DBID', referencedColumnName: 'DBID' },
+  //   { name: 'SQL_ID', referencedColumnName: 'SQL_ID' },
+  // ])
+  // sqlText: SqlText;
 
   @Field(() => Number)
   @Column({ type: 'decimal', precision: 10 })

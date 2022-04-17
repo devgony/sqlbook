@@ -15,7 +15,7 @@ export class SqlText {
   @Field(() => String)
   @Column({ type: 'text' })
   SQL_TEXT: string;
-  @OneToMany(() => SqlHist, sqlHist => sqlHist.sqlText)
-  @JoinColumn([{ name: 'DBID' }, { name: 'SQL_ID' }])
-  sqlHists: SqlHist[];
+  // @OneToMany(() => SqlHist, sqlHist => sqlHist.sqlText)
+  // @JoinColumn([{ name: 'DBID' }, { name: 'SQL_ID' }])
+  // sqlHists: SqlHist[];
 }

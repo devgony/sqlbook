@@ -16,6 +16,7 @@ import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 import { Db } from './entities/dbs.entity';
 import { SqlHist } from './entities/sqlHist.entity';
+import { SqlHistText } from './entities/sqlHistText.entity';
 import { SqlText } from './entities/sqlText.entity';
 
 @Injectable()
@@ -25,6 +26,8 @@ export class DbsService {
     private readonly dbs: Repository<Db>,
     @InjectRepository(SqlHist) private readonly sqlHists: Repository<SqlHist>,
     @InjectRepository(SqlText) private readonly sqlTexts: Repository<SqlText>,
+    @InjectRepository(SqlHistText)
+    private readonly sqlHistTexts: Repository<SqlHistText>,
     @InjectConnection('connOracle') private readonly ora: Connection,
   ) {}
 
@@ -157,16 +160,18 @@ export class DbsService {
   async findSqlHists({ page }: FindSqlHistsInput): Promise<FindSqlHistsOutput> {
     const PER_PAGE = 10;
     try {
-      const [sqlHists, totalResults] = await this.sqlHists.findAndCount({
-        skip: (page - 1) * PER_PAGE,
-        take: PER_PAGE,
-        // order: {
-        // }
-        // relations: ['SqlText'],
-      });
+      const [sqlHistTexts, totalResults] = await this.sqlHistTexts.findAndCount(
+        {
+          skip: (page - 1) * PER_PAGE,
+          take: PER_PAGE,
+          // order: {
+          // }
+          // relations: ['SqlText'],
+        },
+      );
       return {
         ok: true,
-        sqlHists,
+        sqlHistTexts,
         totalPages: Math.ceil(totalResults / PER_PAGE),
         totalResults,
       };
