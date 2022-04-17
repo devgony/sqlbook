@@ -3,8 +3,8 @@ import { NextPage } from 'next';
 import { useMemo } from 'react';
 import Table from '../components/Table';
 import {
-  FindSqlHistsQuery,
-  FindSqlHistsQueryVariables,
+  FindSqlStatTextsQuery,
+  FindSqlStatTextsQueryVariables,
 } from '../generated/graphql';
 
 const headers = [
@@ -14,6 +14,7 @@ const headers = [
   'DBID',
   'INSTANCE_NUMBER',
   'SQL_ID',
+  'SQL_TEXT',
   'PLAN_HASH_VALUE',
   'VERSION_COUNT',
   'MODULE',
@@ -48,19 +49,20 @@ const headers = [
 ];
 
 const FIND_SQL_HISTS = gql`
-  query findSqlHists($input: FindSqlHistsInput!) {
-    findSqlHists(input: $input) {
+  query findSqlStatTexts($input: FindSqlStatTextsInput!) {
+    findSqlStatTexts(input: $input) {
       ok
       error
       totalPages
       totalResults
-      sqlHists {
+      sqlStatTexts {
         SNAP_ID
         BEGIN_INTERVAL_TIME
         END_INTERVAL_TIME
         DBID
         INSTANCE_NUMBER
         SQL_ID
+        SQL_TEXT
         PLAN_HASH_VALUE
         VERSION_COUNT
         MODULE
@@ -99,8 +101,8 @@ const FIND_SQL_HISTS = gql`
 
 const TopSql: NextPage = () => {
   const [findSqlHists, { data, error }] = useLazyQuery<
-    FindSqlHistsQuery,
-    FindSqlHistsQueryVariables
+    FindSqlStatTextsQuery,
+    FindSqlStatTextsQueryVariables
   >(FIND_SQL_HISTS, { variables: { input: { page: 1 } } });
   const columns = useMemo(
     () => headers.map(v => ({ Header: v, accessor: v })),
@@ -118,8 +120,8 @@ const TopSql: NextPage = () => {
         Search
       </button>
       <div>
-        {data?.findSqlHists.sqlHists ? (
-          <Table columns={columns} data={data.findSqlHists.sqlHists} />
+        {data?.findSqlStatTexts.sqlStatTexts ? (
+          <Table columns={columns} data={data.findSqlStatTexts.sqlStatTexts} />
         ) : (
           <Table columns={columns} data={[]} />
         )}
