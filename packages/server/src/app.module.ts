@@ -8,9 +8,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from './jwt/jwt.module';
 import { DbsModule } from './dbs/dbs.module';
 import { Db } from './dbs/entities/dbs.entity';
-import { SqlHist } from './dbs/entities/sqlHist.entity';
+import { SqlStat } from './dbs/entities/sqlStat.entity';
 import { SqlText } from './dbs/entities/sqlText.entity';
-import { SqlHistText } from './dbs/entities/sqlHistText.entity';
+import { SqlStatText } from './dbs/entities/sqlStatText.entity';
 
 @Module({
   imports: [
@@ -49,7 +49,7 @@ import { SqlHistText } from './dbs/entities/sqlHistText.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
-      entities: [User, Db, SqlHist, SqlText, SqlHistText],
+      entities: [User, Db, SqlStat, SqlText, SqlStatText],
     }),
     TypeOrmModule.forRoot({
       name: 'connOracle',

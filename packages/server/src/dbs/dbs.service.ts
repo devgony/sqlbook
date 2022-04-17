@@ -2,21 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
-import { querySqlHist, querySqlText } from 'src/common/queries';
+import { querySqlStat, querySqlText } from 'src/common/queries';
 import { Connection, createConnection, Repository } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
 import {
-  FindSqlHistsInput,
-  FindSqlHistsOutput,
-} from './dtos/find-sql-hists.dto';
-import { GatherSqlHistOutput } from './dtos/gather-sql-hist.dto';
+  FindSqlStatTextsInput,
+  FindSqlStatTextsOutput,
+} from './dtos/find-sql-stat-texts.dto';
+import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 import { Db } from './entities/dbs.entity';
-import { SqlHist } from './entities/sqlHist.entity';
-import { SqlHistText } from './entities/sqlHistText.entity';
+import { SqlStat } from './entities/sqlStat.entity';
+import { SqlStatText } from './entities/sqlStatText.entity';
 import { SqlText } from './entities/sqlText.entity';
 
 @Injectable()
@@ -24,10 +24,10 @@ export class DbsService {
   constructor(
     @InjectRepository(Db)
     private readonly dbs: Repository<Db>,
-    @InjectRepository(SqlHist) private readonly sqlHists: Repository<SqlHist>,
+    @InjectRepository(SqlStat) private readonly sqlHists: Repository<SqlStat>,
     @InjectRepository(SqlText) private readonly sqlTexts: Repository<SqlText>,
-    @InjectRepository(SqlHistText)
-    private readonly sqlHistTexts: Repository<SqlHistText>,
+    @InjectRepository(SqlStatText)
+    private readonly sqlHistTexts: Repository<SqlStatText>,
     @InjectConnection('connOracle') private readonly ora: Connection,
   ) {}
 
@@ -130,9 +130,9 @@ export class DbsService {
     }
   }
 
-  async gatherSqlHist(): Promise<GatherSqlHistOutput> {
+  async gatherSqlStat(): Promise<GatherSqlStatOutput> {
     try {
-      const sqlHist: SqlHist[] = await this.ora.query(querySqlHist);
+      const sqlHist: SqlStat[] = await this.ora.query(querySqlStat);
       await this.sqlHists.insert(sqlHist);
       // await this.sqlHists.save(this.sqlHists.create(sqlHist));
       return { ok: true };
@@ -157,21 +157,22 @@ export class DbsService {
     }
   }
 
-  async findSqlHists({ page }: FindSqlHistsInput): Promise<FindSqlHistsOutput> {
+  async findSqlStatTexts({
+    page,
+  }: FindSqlStatTextsInput): Promise<FindSqlStatTextsOutput> {
     const PER_PAGE = 10;
     try {
-      const [sqlHistTexts, totalResults] = await this.sqlHistTexts.findAndCount(
+      const [sqlStatTexts, totalResults] = await this.sqlHistTexts.findAndCount(
         {
           skip: (page - 1) * PER_PAGE,
           take: PER_PAGE,
           // order: {
           // }
-          // relations: ['SqlText'],
         },
       );
       return {
         ok: true,
-        sqlHistTexts,
+        sqlStatTexts,
         totalPages: Math.ceil(totalResults / PER_PAGE),
         totalResults,
       };

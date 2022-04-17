@@ -4,10 +4,10 @@ import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
 import {
-  FindSqlHistsInput,
-  FindSqlHistsOutput,
-} from './dtos/find-sql-hists.dto';
-import { GatherSqlHistOutput } from './dtos/gather-sql-hist.dto';
+  FindSqlStatTextsInput,
+  FindSqlStatTextsOutput,
+} from './dtos/find-sql-stat-texts.dto';
+import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 
@@ -39,9 +39,9 @@ export class DbsResolver {
     return this.dbsService.testDb(testdbInput);
   }
 
-  @Query(() => GatherSqlHistOutput)
-  async gatherSqlHist(): Promise<GatherSqlHistOutput> {
-    return this.dbsService.gatherSqlHist();
+  @Query(() => GatherSqlStatOutput)
+  async gatherSqlStat(): Promise<GatherSqlStatOutput> {
+    return this.dbsService.gatherSqlStat();
   }
 
   @Query(() => GatherSqlTextOutput)
@@ -49,10 +49,10 @@ export class DbsResolver {
     return this.dbsService.gatherSqlText();
   }
 
-  @Query(() => FindSqlHistsOutput)
-  findSqlHists(
-    @Args('input') findSqlHistTextsInput: FindSqlHistsInput,
-  ): Promise<FindSqlHistsOutput> {
-    return this.dbsService.findSqlHists(findSqlHistTextsInput);
+  @Query(() => FindSqlStatTextsOutput)
+  findSqlStatTexts(
+    @Args('input') findSqlHistTextsInput: FindSqlStatTextsInput,
+  ): Promise<FindSqlStatTextsOutput> {
+    return this.dbsService.findSqlStatTexts(findSqlHistTextsInput);
   }
 }

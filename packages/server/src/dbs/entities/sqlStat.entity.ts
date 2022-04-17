@@ -1,17 +1,10 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { SqlText } from './sqlText.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@InputType('SqlHistEntity', { isAbstract: true }) // to get input as InputType
+@InputType('SqlStatEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
-@Entity({ name: 'TB_SQL_HIST' })
-export class SqlHist {
+@Entity({ name: 'TB_SQL_STAT' })
+export class SqlStat {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
   id: number;
@@ -34,17 +27,6 @@ export class SqlHist {
   @Field(() => String)
   @Column({ type: 'varchar', length: 20 })
   SQL_ID: number;
-
-  // @Field(() => SqlText, { nullable: true })
-  // @ManyToOne(() => SqlText, sqlText => sqlText.sqlHists, {
-  //   createForeignKeyConstraints: false,
-  //   eager: true,
-  // })
-  // @JoinColumn([
-  //   { name: 'DBID', referencedColumnName: 'DBID' },
-  //   { name: 'SQL_ID', referencedColumnName: 'SQL_ID' },
-  // ])
-  // sqlText: SqlText;
 
   @Field(() => Number)
   @Column({ type: 'decimal', precision: 10 })

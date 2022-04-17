@@ -1,6 +1,6 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
-import { SqlHist } from './sqlHist.entity';
+import { SqlStat } from './sqlStat.entity';
 
 @InputType('SqlTextEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
