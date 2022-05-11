@@ -3,7 +3,7 @@ import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
 import { querySqlStat, querySqlText } from 'src/common/queries';
-import { Connection, createConnection, Repository } from 'typeorm';
+import { Connection, createConnection, MoreThan, Repository } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
@@ -157,8 +157,13 @@ export class DbsService {
     }
   }
 
+  isValidDate(date) {
+    return !isNaN(date) && date instanceof Date;
+  }
+
   async findSqlStatTexts({
     page,
+    date,
   }: FindSqlStatTextsInput): Promise<FindSqlStatTextsOutput> {
     const PER_PAGE = 10;
     try {
@@ -166,6 +171,11 @@ export class DbsService {
         {
           skip: (page - 1) * PER_PAGE,
           take: PER_PAGE,
+          ...(this.isValidDate(date) && {
+            where: {
+              END_INTERVAL_TIME: MoreThan(date),
+            },
+          }),
           // order: {
           // }
         },

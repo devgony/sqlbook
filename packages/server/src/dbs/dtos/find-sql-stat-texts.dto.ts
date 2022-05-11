@@ -6,7 +6,16 @@ import {
 import { SqlStatText } from '../entities/sqlStatText.entity';
 
 @InputType()
-export class FindSqlStatTextsInput extends PaginationInput {}
+export class FindSqlStatTextsInput extends PaginationInput {
+  @Field(() => String)
+  dbName: string;
+  @Field(() => Date)
+  date: Date;
+  @Field(() => String)
+  module: string;
+  @Field(() => String)
+  user: string;
+}
 
 @ObjectType()
 export class FindSqlStatTextsOutput extends PaginationOutput {

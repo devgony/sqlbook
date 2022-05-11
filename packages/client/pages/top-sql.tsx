@@ -1,6 +1,7 @@
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import { NextPage } from 'next';
 import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 import Table from '../components/Table';
 import {
   FindSqlStatTextsQuery,
@@ -100,23 +101,44 @@ const FIND_SQL_HISTS = gql`
 `;
 
 const TopSql: NextPage = () => {
+  const { register, getValues, handleSubmit, formState } = useForm({
+    mode: 'onChange',
+  });
   const [findSqlHists, { data, error }] = useLazyQuery<
     FindSqlStatTextsQuery,
     FindSqlStatTextsQueryVariables
-  >(FIND_SQL_HISTS, { variables: { input: { page: 1 } } });
+  >(FIND_SQL_HISTS);
   const columns = useMemo(
     () => headers.map(v => ({ Header: v, accessor: v })),
     [],
   );
+  const onSubmit = () => {
+    const { dbName, date, module, user } = getValues();
+    findSqlHists({
+      variables: {
+        input: {
+          page: 1,
+          dbName,
+          date,
+          module,
+          user,
+        },
+      },
+    });
+  };
   return (
-    <div className="mt-10">
+    <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
       <h1>TOP SQL List</h1>
       <input className="bg-gray-200 mr-1" placeholder="DB" />
-      <input className="bg-gray-200 mr-1" placeholder="Date" />
-      <input className="bg-gray-200 mr-1" placeholder="Time" />
+      <input
+        type="datetime-local"
+        className="bg-gray-200 mr-1"
+        placeholder="Date"
+        {...register('date')}
+      />
       <input className="bg-gray-200 mr-1" placeholder="Module" />
       <input className="bg-gray-200 mr-1" placeholder="User" />
-      <button className="btn" onClick={() => findSqlHists()}>
+      <button type="submit" className="btn">
         Search
       </button>
       <div>
@@ -126,7 +148,7 @@ const TopSql: NextPage = () => {
           <Table columns={columns} data={[]} />
         )}
       </div>
-    </div>
+    </form>
   );
 };
 export default TopSql;
