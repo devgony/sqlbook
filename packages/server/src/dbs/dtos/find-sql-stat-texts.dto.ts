@@ -7,14 +7,14 @@ import { SqlStatText } from '../entities/sqlStatText.entity';
 
 @InputType()
 export class FindSqlStatTextsInput extends PaginationInput {
-  @Field(() => String)
-  dbName: string;
-  @Field(() => Date)
-  date: Date;
-  @Field(() => String)
-  module: string;
-  @Field(() => String)
-  user: string;
+  @Field(() => String, { nullable: true })
+  dbName?: string;
+  @Field(() => Date, { nullable: true })
+  date?: Date;
+  @Field(() => String, { nullable: true })
+  module?: string;
+  @Field(() => String, { nullable: true })
+  user?: string;
 }
 
 @ObjectType()

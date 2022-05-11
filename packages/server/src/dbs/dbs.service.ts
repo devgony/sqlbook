@@ -163,7 +163,10 @@ export class DbsService {
 
   async findSqlStatTexts({
     page,
+    dbName,
     date,
+    module,
+    user,
   }: FindSqlStatTextsInput): Promise<FindSqlStatTextsOutput> {
     const PER_PAGE = 10;
     try {
@@ -171,11 +174,14 @@ export class DbsService {
         {
           skip: (page - 1) * PER_PAGE,
           take: PER_PAGE,
-          ...(this.isValidDate(date) && {
-            where: {
+          where: {
+            ...(this.isValidDate(date) && {
               END_INTERVAL_TIME: MoreThan(date),
-            },
-          }),
+            }),
+            ...(module && {
+              MODULE: module,
+            }),
+          },
           // order: {
           // }
         },
