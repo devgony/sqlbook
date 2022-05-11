@@ -227,7 +227,10 @@ export default function Table({ columns, data }: any) {
               <div {...row.getRowProps()} className="tr">
                 {row.cells.map(cell => {
                   return (
-                    <div {...cell.getCellProps(cellProps)} className="td">
+                    <div
+                      {...cell.getCellProps(cellProps)}
+                      className="td truncate"
+                    >
                       {cell.render('Cell')}
                     </div>
                   );

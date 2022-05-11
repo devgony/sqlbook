@@ -136,6 +136,11 @@ const TopSql: NextPage = () => {
         placeholder="Date"
         {...register('date')}
       />
+      <input
+        className="bg-gray-200 mr-1"
+        placeholder="Module"
+        {...register('module')}
+      />
       <input className="bg-gray-200 mr-1" placeholder="Module" />
       <input className="bg-gray-200 mr-1" placeholder="User" />
       <button type="submit" className="btn">
