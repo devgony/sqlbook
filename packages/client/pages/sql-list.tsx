@@ -129,10 +129,20 @@ const SqlList: NextPage = () => {
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="ml-4">TOP SQL List</h1>
-      <input type="radio" name="type" value="io" />
-      <label htmlFor="io">IO</label>
-      <input type="radio" name="type" value="cpu" />
-      <label htmlFor="cpu">CPU</label>
+      <input className="bg-gray-200 mr-1 ml-4" placeholder="DB" />
+      <input
+        type="datetime-local"
+        className="bg-gray-200 mr-1"
+        placeholder="Date"
+        {...register('date')}
+      />
+      <input
+        className="bg-gray-200 mr-1"
+        placeholder="Module"
+        {...register('module')}
+      />
+      <input className="bg-gray-200 mr-1" placeholder="Module" />
+      <input className="bg-gray-200 mr-1" placeholder="User" />
       <button type="submit" className="btn">
         Search
       </button>
