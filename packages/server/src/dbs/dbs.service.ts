@@ -3,7 +3,13 @@ import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
 import { querySnapshot, querySqlStat, querySqlText } from 'src/common/queries';
-import { Connection, createConnection, MoreThan, Repository } from 'typeorm';
+import {
+  Connection,
+  createConnection,
+  Like,
+  MoreThan,
+  Repository,
+} from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
@@ -225,12 +231,15 @@ export class DbsService {
     type,
     min,
     take,
+    module,
   }: FindTopSqlsInput): Promise<FindTopSqlsOutput> {
     try {
       const where =
         type == 'ELAPSED_TIME'
           ? { AVG_ELAPSED_SEC: MoreThan(min) }
           : { BUFFER_GETS_TOTAL: MoreThan(min) };
+
+      where['MODULE'] = Like(`%${module}%`);
 
       const topSqls = await this.topSqls.find({
         where,

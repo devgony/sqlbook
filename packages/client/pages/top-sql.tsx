@@ -83,9 +83,10 @@ const SqlList: NextPage = () => {
       elapsedTimeMin: 3,
       bufferGetMin: 50000,
       take: 30,
+      module: '%',
     },
   });
-  const [findSqlHists, { data, error }] = useLazyQuery<
+  const [findTopSqls, { data, error }] = useLazyQuery<
     FindTopSqlsQuery,
     FindTopSqlsQueryVariables
   >(FIND_TOP_SQLS);
@@ -94,15 +95,16 @@ const SqlList: NextPage = () => {
     [],
   );
   const onSubmit = () => {
-    const { type, elapsedTimeMin, bufferGetMin, take } = getValues();
+    const { type, elapsedTimeMin, bufferGetMin, take, module } = getValues();
     const min =
       type == TopSqlType.ElapsedTime ? +elapsedTimeMin : +bufferGetMin;
-    findSqlHists({
+    findTopSqls({
       variables: {
         input: {
           type,
           min,
           take: +take,
+          module,
         },
       },
     });
@@ -110,7 +112,7 @@ const SqlList: NextPage = () => {
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="ml-4 text-xl">TOP SQL List</h1>
-      <div className="flex items-center">
+      <div className="flex">
         <div className="flex flex-col">
           <div>
             <input type="radio" value="ELAPSED_TIME" {...register('type')} />
@@ -135,10 +137,20 @@ const SqlList: NextPage = () => {
             />
           </div>
         </div>
-        <label htmlFor="top" className="mr-2">
-          TOP
-        </label>
-        <input type="number" placeholder="top" {...register('take')} />
+        <div className="flex flex-col">
+          <div>
+            <label htmlFor="top" className="mr-2">
+              Module
+            </label>
+            <input placeholder="module" {...register('module')} />
+          </div>
+          <div>
+            <label htmlFor="top" className="mr-2">
+              TOP
+            </label>
+            <input type="number" placeholder="top" {...register('take')} />
+          </div>
+        </div>
         <button type="submit" className="btn">
           Search
         </button>

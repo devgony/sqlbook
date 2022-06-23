@@ -28,6 +28,9 @@ export class FindTopSqlsInput {
 
   @Field(() => Number)
   take: number;
+
+  @Field(() => String)
+  module: string;
 }
 
 @ObjectType()
