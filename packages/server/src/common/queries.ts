@@ -94,8 +94,8 @@ SQL_TEXT                                           CLOB
 // AND H.DBID=T.DBID
 // AND H.SNAP_ID >= (SELECT MAX(snap_id) from dba_hist_snapshot)
 // `;
-export const querySqlStat = `SELECT * FROM DBA_HIST_SQLSTAT
-WHERE SNAP_ID >= (SELECT MAX(snap_id) from dba_hist_snapshot)`;
+export const querySqlStat = `SELECT * FROM DBA_HIST_SQLSTAT`;
+// WHERE SNAP_ID >= (SELECT MAX(snap_id) from dba_hist_snapshot)`;
 
 // TB_SQL_TEXT
 
@@ -103,3 +103,6 @@ export const querySqlText = `SELECT * FROM DBA_HIST_SQLTEXT`;
 // S
 // WHERE S.SQL_ID NOT EXISTS
 // ( SELECT 1 FROM TB_SQL T WHERE S.SQL_ID=T.SQL_ID AND S.DBID=T.DBID WHERE ROWNUM = 1 )`;
+
+export const querySnapshot = `SELECT SNAP_ID, DBID, INSTANCE_NUMBER, STARTUP_TIME, BEGIN_INTERVAL_TIME, END_INTERVAL_TIME
+FROM DBA_HIST_SNAPSHOT`;

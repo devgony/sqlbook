@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
-import { querySqlStat, querySqlText } from 'src/common/queries';
+import { querySnapshot, querySqlStat, querySqlText } from 'src/common/queries';
 import { Connection, createConnection, MoreThan, Repository } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
@@ -11,13 +11,17 @@ import {
   FindSqlStatTextsInput,
   FindSqlStatTextsOutput,
 } from './dtos/find-sql-stat-texts.dto';
+import { FindTopSqlsOutput } from './dtos/find-topsqls.dto';
+import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 import { Db } from './entities/dbs.entity';
+import { Snapshot } from './entities/snapshot.entity';
 import { SqlStat } from './entities/sqlStat.entity';
 import { SqlStatText } from './entities/sqlStatText.entity';
 import { SqlText } from './entities/sqlText.entity';
+import { TopSql } from './entities/topsql.entity';
 
 @Injectable()
 export class DbsService {
@@ -28,8 +32,12 @@ export class DbsService {
     private readonly sqlHists: Repository<SqlStat>,
     @InjectRepository(SqlText)
     private readonly sqlTexts: Repository<SqlText>,
+    @InjectRepository(Snapshot)
+    private readonly snapshots: Repository<Snapshot>,
     @InjectRepository(SqlStatText)
     private readonly sqlStatTexts: Repository<SqlStatText>,
+    @InjectRepository(TopSql)
+    private readonly topSqls: Repository<TopSql>,
     @InjectConnection('connOracle') private readonly ora: Connection,
   ) {}
 
@@ -159,6 +167,19 @@ export class DbsService {
     }
   }
 
+  async gatherSnapshot(): Promise<GatherSnapshotOutput> {
+    try {
+      const snapshots: Snapshot[] = await this.ora.query(querySnapshot);
+      await this.snapshots.upsert(snapshots, {
+        conflictPaths: ['DBID', 'SNAP_ID'],
+      });
+      return { ok: true };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error };
+    }
+  }
+
   isValidDate(date) {
     return !isNaN(date) && date instanceof Date;
   }
@@ -194,6 +215,18 @@ export class DbsService {
         totalPages: Math.ceil(totalResults / PER_PAGE),
         totalResults,
       };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error };
+    }
+  }
+
+  async findTopSqls(): Promise<FindTopSqlsOutput> {
+    try {
+      const topSqls = await this.topSqls.find({
+        where: { AVG_ELAPSED_SEC: MoreThan(3) },
+      });
+      return { ok: true, topSqls };
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error };
