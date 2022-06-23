@@ -16,8 +16,6 @@ const token =
 export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
 
-console.log('node_env = ' + process.env.NODE_ENV);
-
 // let uri =
 //   process.env.NODE_ENV == 'production'
 //     ? 'http://localhost:4000/graphql'

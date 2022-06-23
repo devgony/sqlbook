@@ -17,9 +17,9 @@ const NavBar: NextComponentType = () => {
         <a className="bg-yellow-300 ml-4 text-3xl">📖 SQL Book</a>
       </Link>
       <nav className="w-1/2 flex justify-around">
-        <Link href="/sql-list">
+        {/* <Link href="/sql-list">
           <a>SQL LIST</a>
-        </Link>
+        </Link> */}
         <Link href="/top-sql">
           <a>TOP SQL</a>
         </Link>

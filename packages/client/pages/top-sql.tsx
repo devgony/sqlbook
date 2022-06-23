@@ -4,97 +4,72 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import Table from '../components/Table';
 import {
-  FindSqlStatTextsQuery,
-  FindSqlStatTextsQueryVariables,
+  FindTopSqlsQuery,
+  FindTopSqlsQueryVariables,
+  TopSqlType,
 } from '../generated/graphql';
 
 const headers = [
-  'SNAP_ID',
-  'BEGIN_INTERVAL_TIME',
-  'END_INTERVAL_TIME',
-  'DBID',
   'INSTANCE_NUMBER',
   'SQL_ID',
-  'SQL_TEXT',
-  'PLAN_HASH_VALUE',
-  'VERSION_COUNT',
+  'PARSING_SCHEMA_NAME',
   'MODULE',
-  'FETCHES_TOTAL',
-  'FETCHES_DELTA',
-  'END_OF_FETCH_COUNT_TOTAL',
-  'END_OF_FETCH_COUNT_DELTA',
-  'SORTS_TOTAL',
-  'SORTS_DELTA',
-  'EXECUTIONS_TOTAL',
-  'EXECUTIONS_DELTA',
-  'LOADS_TOTAL',
-  'LOADS_DELTA',
-  'PARSE_CALLS_TOTAL',
-  'PARSE_CALLS_DELTA',
-  'DISK_READS_TOTAL',
-  'DISK_READS_DELTA',
+  'JOB_NAME',
+  'SQL_TEXT',
+  'EXECUTIONS',
   'BUFFER_GETS_TOTAL',
-  'BUFFER_GETS_DELTA',
-  'ROWS_PROCESSED_TOTAL',
-  'ROWS_PROCESSED_DELTA',
-  'CPU_TIME_TOTAL',
-  'CPU_TIME_DELTA',
-  'ELAPSED_TIME_TOTAL',
-  'ELAPSED_TIME_DELTA',
-  'DIRECT_WRITES_TOTAL',
-  'DIRECT_WRITES_DELTA',
-  'PHYSICAL_READ_BYTES_TOTAL',
-  'PHYSICAL_READ_BYTES_DELTA',
-  'PHYSICAL_WRITE_BYTES_TOTAL',
-  'PHYSICAL_WRITE_BYTES_DELTA',
+  'ROWS_PROCESSED',
+  'TOTAL_ELAPSED_MIN',
+  'AVG_ROWS',
+  'AVG_ELAPSED_SEC',
+  'AVG_BUFFER_GETS',
+  'AVG_DISK_READS',
+  'TOTAL_CPU_MIN',
+  'TOTAL_IOWAIT_MIN',
+  'TOTAL_CLWAIT_MIN',
+  'TOTAL_APWAIT_MIN',
+  'TOTAL_CCWAIT_MIN',
+  'AVG_CPU_SEC',
+  'AVG_IOWAIT_SEC',
+  'AVG_CLWAIT_SEC',
+  'AVG_APWAIT_SEC',
+  'AVG_CCWAIT_SEC',
+  'LAST_EXEC_TIME',
+  'FIRST_EXEC_TIME',
 ];
 
-const FIND_SQL_HISTS = gql`
-  query findSqlStatTexts($input: FindSqlStatTextsInput!) {
-    findSqlStatTexts(input: $input) {
+const FIND_TOP_SQLS = gql`
+  query findTopSqls($input: FindTopSqlsInput!) {
+    findTopSqls(input: $input) {
       ok
       error
-      totalPages
-      totalResults
-      sqlStatTexts {
-        SNAP_ID
-        BEGIN_INTERVAL_TIME
-        END_INTERVAL_TIME
-        DBID
+      topSqls {
         INSTANCE_NUMBER
         SQL_ID
-        SQL_TEXT
-        PLAN_HASH_VALUE
-        VERSION_COUNT
+        PARSING_SCHEMA_NAME
         MODULE
-        FETCHES_TOTAL
-        FETCHES_DELTA
-        END_OF_FETCH_COUNT_TOTAL
-        END_OF_FETCH_COUNT_DELTA
-        SORTS_TOTAL
-        SORTS_DELTA
-        EXECUTIONS_TOTAL
-        EXECUTIONS_DELTA
-        LOADS_TOTAL
-        LOADS_DELTA
-        PARSE_CALLS_TOTAL
-        PARSE_CALLS_DELTA
-        DISK_READS_TOTAL
-        DISK_READS_DELTA
+        JOB_NAME
+        SQL_TEXT
+        EXECUTIONS
         BUFFER_GETS_TOTAL
-        BUFFER_GETS_DELTA
-        ROWS_PROCESSED_TOTAL
-        ROWS_PROCESSED_DELTA
-        CPU_TIME_TOTAL
-        CPU_TIME_DELTA
-        ELAPSED_TIME_TOTAL
-        ELAPSED_TIME_DELTA
-        DIRECT_WRITES_TOTAL
-        DIRECT_WRITES_DELTA
-        PHYSICAL_READ_BYTES_TOTAL
-        PHYSICAL_READ_BYTES_DELTA
-        PHYSICAL_WRITE_BYTES_TOTAL
-        PHYSICAL_WRITE_BYTES_DELTA
+        ROWS_PROCESSED
+        TOTAL_ELAPSED_MIN
+        AVG_ROWS
+        AVG_ELAPSED_SEC
+        AVG_BUFFER_GETS
+        AVG_DISK_READS
+        TOTAL_CPU_MIN
+        TOTAL_IOWAIT_MIN
+        TOTAL_CLWAIT_MIN
+        TOTAL_APWAIT_MIN
+        TOTAL_CCWAIT_MIN
+        AVG_CPU_SEC
+        AVG_IOWAIT_SEC
+        AVG_CLWAIT_SEC
+        AVG_APWAIT_SEC
+        AVG_CCWAIT_SEC
+        LAST_EXEC_TIME
+        FIRST_EXEC_TIME
       }
     }
   }
@@ -105,9 +80,9 @@ const SqlList: NextPage = () => {
     mode: 'onChange',
   });
   const [findSqlHists, { data, error }] = useLazyQuery<
-    FindSqlStatTextsQuery,
-    FindSqlStatTextsQueryVariables
-  >(FIND_SQL_HISTS);
+    FindTopSqlsQuery,
+    FindTopSqlsQueryVariables
+  >(FIND_TOP_SQLS);
   const columns = useMemo(
     () => headers.map(v => ({ Header: v, accessor: v })),
     [],
@@ -117,11 +92,9 @@ const SqlList: NextPage = () => {
     findSqlHists({
       variables: {
         input: {
-          page: 1,
-          dbName,
-          date,
-          module,
-          user,
+          type: TopSqlType.ElapsedTime,
+          min: 3,
+          take: 30,
         },
       },
     });
@@ -137,8 +110,8 @@ const SqlList: NextPage = () => {
         Search
       </button>
       <div>
-        {data?.findSqlStatTexts.sqlStatTexts ? (
-          <Table columns={columns} data={data.findSqlStatTexts.sqlStatTexts} />
+        {data?.findTopSqls.topSqls ? (
+          <Table columns={columns} data={data.findTopSqls.topSqls} />
         ) : (
           <Table columns={columns} data={[]} />
         )}
