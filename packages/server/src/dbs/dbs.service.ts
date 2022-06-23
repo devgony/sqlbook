@@ -231,9 +231,14 @@ export class DbsService {
         type == 'ELAPSED_TIME'
           ? { AVG_ELAPSED_SEC: MoreThan(min) }
           : { BUFFER_GETS_TOTAL: MoreThan(min) };
+
       const topSqls = await this.topSqls.find({
         where,
         take,
+        order:
+          type == 'ELAPSED_TIME'
+            ? { AVG_ELAPSED_SEC: 'DESC' }
+            : { BUFFER_GETS_TOTAL: 'DESC' },
       });
       return { ok: true, topSqls };
     } catch (error) {
