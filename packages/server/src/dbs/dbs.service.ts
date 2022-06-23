@@ -24,8 +24,10 @@ export class DbsService {
   constructor(
     @InjectRepository(Db)
     private readonly dbs: Repository<Db>,
-    @InjectRepository(SqlStat) private readonly sqlHists: Repository<SqlStat>,
-    @InjectRepository(SqlText) private readonly sqlTexts: Repository<SqlText>,
+    @InjectRepository(SqlStat)
+    private readonly sqlHists: Repository<SqlStat>,
+    @InjectRepository(SqlText)
+    private readonly sqlTexts: Repository<SqlText>,
     @InjectRepository(SqlStatText)
     private readonly sqlStatTexts: Repository<SqlStatText>,
     @InjectConnection('connOracle') private readonly ora: Connection,

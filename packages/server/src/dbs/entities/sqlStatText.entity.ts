@@ -5,9 +5,9 @@ import { SqlStat } from './sqlStat.entity';
 @InputType('SqlStatTextEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
 @ViewEntity({
-  name: `VW_SQL_STAT_TEXT`,
+  name: `VW_SQLSTAT_TEXT`,
   expression: `
-    SELECT * FROM TB_SQL_STAT LEFT JOIN TB_SQL_TEXT USING(DBID, SQL_ID)
+    SELECT * FROM DBA_HIST_SQLSTAT LEFT JOIN DBA_HIST_SQLTEXT USING(DBID, SQL_ID)
     `,
 })
 export class SqlStatText extends SqlStat {
