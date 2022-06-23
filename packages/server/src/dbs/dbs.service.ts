@@ -11,7 +11,7 @@ import {
   FindSqlStatTextsInput,
   FindSqlStatTextsOutput,
 } from './dtos/find-sql-stat-texts.dto';
-import { FindTopSqlsOutput } from './dtos/find-topsqls.dto';
+import { FindTopSqlsInput, FindTopSqlsOutput } from './dtos/find-topsqls.dto';
 import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
@@ -221,10 +221,19 @@ export class DbsService {
     }
   }
 
-  async findTopSqls(): Promise<FindTopSqlsOutput> {
+  async findTopSqls({
+    type,
+    min,
+    take,
+  }: FindTopSqlsInput): Promise<FindTopSqlsOutput> {
     try {
+      const where =
+        type == 'ELAPSED_TIME'
+          ? { AVG_ELAPSED_SEC: MoreThan(min) }
+          : { BUFFER_GETS_TOTAL: MoreThan(min) };
       const topSqls = await this.topSqls.find({
-        where: { AVG_ELAPSED_SEC: MoreThan(3) },
+        where,
+        take,
       });
       return { ok: true, topSqls };
     } catch (error) {

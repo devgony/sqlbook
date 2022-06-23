@@ -46,6 +46,7 @@ import { SqlStat } from './sqlStat.entity';
               , SUBSTR(A.MODULE, INSTR(A.MODULE, '[') + 1, 13) AS JOB_NAME
               , B.SQL_TEXT
               , A.EXECUTIONS -- AS "총수행횟수"
+              , A.BUFFER_GETS_TOTAL
               , A.ROWS_PROCESSED -- AS "총로우수"
               , ROUND(A.ELAPSED_TIME / 60, 6) AS TOTAL_ELAPSED_MIN -- "총수행시간(분)"
               , ROUND(A.ROWS_PROCESSED / (CASE WHEN EXECUTIONS = 0 THEN 1 ELSE A.EXECUTIONS END), 0) AS AVG_ROWS -- "평균로우수"
@@ -72,6 +73,7 @@ import { SqlStat } from './sqlStat.entity';
               , A.MODULE
               , SUM(EXECUTIONS_DELTA) AS EXECUTIONS
               , SUM(DISK_READS_DELTA) AS DISK_READS
+              , SUM(BUFFER_GETS_TOTAL) AS BUFFER_GETS_TOTAL
               , SUM(BUFFER_GETS_DELTA) AS BUFFER_GETS
               , SUM(ROWS_PROCESSED_DELTA) AS ROWS_PROCESSED
               , SUM(CPU_TIME_DELTA) / 1000000 AS CPU_TIME
@@ -134,7 +136,7 @@ import { SqlStat } from './sqlStat.entity';
           -- WHERE AVG_ELAPSED_SEC > 3
       ) SUB2
   ) SUB3
-  ORDER BY AVG_ELAPSED_SEC DESC`,
+--   ORDER BY AVG_ELAPSED_SEC DESC`,
 })
 export class TopSql {
   @Field(() => Number)
@@ -158,6 +160,9 @@ export class TopSql {
   @Field(() => Number)
   @ViewColumn()
   EXECUTIONS: number;
+  @Field(() => Number)
+  @ViewColumn()
+  BUFFER_GETS_TOTAL: number;
   @Field(() => Number)
   @ViewColumn()
   ROWS_PROCESSED: number;

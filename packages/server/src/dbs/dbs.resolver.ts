@@ -7,7 +7,7 @@ import {
   FindSqlStatTextsInput,
   FindSqlStatTextsOutput,
 } from './dtos/find-sql-stat-texts.dto';
-import { FindTopSqlsOutput } from './dtos/find-topsqls.dto';
+import { FindTopSqlsInput, FindTopSqlsOutput } from './dtos/find-topsqls.dto';
 import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
@@ -64,7 +64,9 @@ export class DbsResolver {
   }
 
   @Query(() => FindTopSqlsOutput)
-  findTopSqls(): Promise<FindTopSqlsOutput> {
-    return this.dbsService.findTopSqls();
+  findTopSqls(
+    @Args('input') findTopSqlsInput: FindTopSqlsInput,
+  ): Promise<FindTopSqlsOutput> {
+    return this.dbsService.findTopSqls(findTopSqlsInput);
   }
 }
