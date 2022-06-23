@@ -76,8 +76,14 @@ const FIND_TOP_SQLS = gql`
 `;
 
 const SqlList: NextPage = () => {
-  const { register, getValues, handleSubmit, formState } = useForm({
+  const { register, getValues, handleSubmit, formState, watch } = useForm({
     mode: 'onChange',
+    defaultValues: {
+      type: TopSqlType.ElapsedTime,
+      elapsedTimeMin: 3,
+      bufferGetMin: 50000,
+      take: 30,
+    },
   });
   const [findSqlHists, { data, error }] = useLazyQuery<
     FindTopSqlsQuery,
@@ -88,27 +94,55 @@ const SqlList: NextPage = () => {
     [],
   );
   const onSubmit = () => {
-    const { dbName, date, module, user } = getValues();
+    const { type, elapsedTimeMin, bufferGetMin, take } = getValues();
+    const min =
+      type == TopSqlType.ElapsedTime ? +elapsedTimeMin : +bufferGetMin;
     findSqlHists({
       variables: {
         input: {
-          type: TopSqlType.ElapsedTime,
-          min: 3,
-          take: 30,
+          type,
+          min,
+          take: +take,
         },
       },
     });
   };
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="ml-4">TOP SQL List</h1>
-      <input type="radio" name="type" value="io" />
-      <label htmlFor="io">IO</label>
-      <input type="radio" name="type" value="cpu" />
-      <label htmlFor="cpu">CPU</label>
-      <button type="submit" className="btn">
-        Search
-      </button>
+      <h1 className="ml-4 text-xl">TOP SQL List</h1>
+      <div className="flex items-center">
+        <div className="flex flex-col">
+          <div>
+            <input type="radio" value="ELAPSED_TIME" {...register('type')} />
+            <label htmlFor="ELAPSED_TIME"> ELAPSED_TIME</label>
+            <label htmlFor="elapsedTimeMin">{' > '}</label>
+            <input
+              type="number"
+              placeholder="min"
+              disabled={watch().type == TopSqlType.ElapsedTime ? false : true}
+              {...register('elapsedTimeMin')}
+            />
+          </div>
+          <div>
+            <input type="radio" value="BUFFER_GET" {...register('type')} />
+            <label htmlFor="BUFFER_GET"> BUFFER_GET</label>
+            <label htmlFor="bufferGetMin">{' > '}</label>
+            <input
+              type="number"
+              placeholder="min"
+              disabled={watch().type == TopSqlType.BufferGet ? false : true}
+              {...register('bufferGetMin')}
+            />
+          </div>
+        </div>
+        <label htmlFor="top" className="mr-2">
+          TOP
+        </label>
+        <input type="number" placeholder="top" {...register('take')} />
+        <button type="submit" className="btn">
+          Search
+        </button>
+      </div>
       <div>
         {data?.findTopSqls.topSqls ? (
           <Table columns={columns} data={data.findTopSqls.topSqls} />
