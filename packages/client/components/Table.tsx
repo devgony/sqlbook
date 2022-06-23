@@ -229,7 +229,7 @@ export default function Table({ columns, data }: any) {
                   return (
                     <div
                       {...cell.getCellProps(cellProps)}
-                      className="td truncate"
+                      className="td truncate cursor-pointer"
                     >
                       {cell.render('Cell')}
                     </div>
