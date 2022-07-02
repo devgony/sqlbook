@@ -41,6 +41,7 @@ import { SqlStat } from './sqlStat.entity';
               SELECT /*+ LEADING(C, A, B) USE_HASH(A, B) FULL(B) NO_MERGE(C) NO_MERGE(A) NO_MERGE(B) */
                 A.INSTANCE_NUMBER
               , A.SQL_ID
+              , A.PLAN_HASH_VALUE 
               , A.PARSING_SCHEMA_NAME
               , A.MODULE
               , SUBSTR(A.MODULE, INSTR(A.MODULE, '[') + 1, 13) AS JOB_NAME
@@ -69,6 +70,7 @@ import { SqlStat } from './sqlStat.entity';
               SELECT /*+ LEADING(B, A) USE_HASH(A) FULL(B) FULL(A) NO_MERGE(B) NO_MERGE(A) */
                 A.INSTANCE_NUMBER
               , A.SQL_ID
+              , A.PLAN_HASH_VALUE 
               , A.PARSING_SCHEMA_NAME
               , A.MODULE
               , SUM(EXECUTIONS_DELTA) AS EXECUTIONS
@@ -90,6 +92,7 @@ import { SqlStat } from './sqlStat.entity';
               GROUP BY
               A.INSTANCE_NUMBER,
               A.SQL_ID
+              , A.PLAN_HASH_VALUE 
               , A.PARSING_SCHEMA_NAME
               , A.MODULE
               ) A
@@ -145,6 +148,9 @@ export class TopSql {
   @Field(() => String)
   @ViewColumn()
   SQL_ID: string;
+  @Field(() => String)
+  @ViewColumn()
+  PLAN_HASH_VALUE: string;
   @Field(() => String)
   @ViewColumn()
   PARSING_SCHEMA_NAME: string;
