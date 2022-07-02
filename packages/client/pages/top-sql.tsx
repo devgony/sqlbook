@@ -12,6 +12,7 @@ import {
 const headers = [
   'INSTANCE_NUMBER',
   'SQL_ID',
+  'PLAN_HASH_VALUE',
   'PARSING_SCHEMA_NAME',
   'MODULE',
   'JOB_NAME',
@@ -46,6 +47,7 @@ const FIND_TOP_SQLS = gql`
       topSqls {
         INSTANCE_NUMBER
         SQL_ID
+        PLAN_HASH_VALUE
         PARSING_SCHEMA_NAME
         MODULE
         JOB_NAME
