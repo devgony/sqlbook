@@ -18,6 +18,7 @@ import {
   FindSqlStatTextsOutput,
 } from './dtos/find-sql-stat-texts.dto';
 import { FindTopSqlsInput, FindTopSqlsOutput } from './dtos/find-topsqls.dto';
+import { FindTuningsOutput } from './dtos/find-tunings.dto';
 import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
@@ -28,6 +29,7 @@ import { SqlStat } from './entities/sqlStat.entity';
 import { SqlStatText } from './entities/sqlStatText.entity';
 import { SqlText } from './entities/sqlText.entity';
 import { TopSql } from './entities/topsql.entity';
+import { Tuning } from './entities/tuning.entity';
 
 @Injectable()
 export class DbsService {
@@ -44,9 +46,10 @@ export class DbsService {
     private readonly sqlStatTexts: Repository<SqlStatText>,
     @InjectRepository(TopSql)
     private readonly topSqls: Repository<TopSql>,
+    @InjectRepository(Tuning)
+    private readonly tunings: Repository<Tuning>,
     @InjectConnection('connOracle') private readonly ora: Connection,
-  ) {}
-
+  ) { }
   async createDB({
     name,
     host,
@@ -253,6 +256,16 @@ export class DbsService {
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error };
+    }
+  }
+
+  async findTunings(): Promise<FindTuningsOutput> {
+    try {
+      const tunings = await this.tunings.find();
+      return { ok: true, tunings }
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error }
     }
   }
 }

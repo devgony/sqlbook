@@ -13,6 +13,7 @@ import { SqlText } from './dbs/entities/sqlText.entity';
 import { SqlStatText } from './dbs/entities/sqlStatText.entity';
 import { Snapshot } from './dbs/entities/snapshot.entity';
 import { TopSql } from './dbs/entities/topsql.entity';
+import { Tuning } from './dbs/entities/tuning.entity';
 
 @Module({
   imports: [
@@ -51,7 +52,7 @@ import { TopSql } from './dbs/entities/topsql.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
-      entities: [User, Db, SqlStat, SqlText, SqlStatText, Snapshot, TopSql],
+      entities: [User, Db, SqlStat, SqlText, SqlStatText, Snapshot, TopSql, Tuning],
     }),
     TypeOrmModule.forRoot({
       name: 'connOracle',
@@ -74,4 +75,4 @@ import { TopSql } from './dbs/entities/topsql.entity';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

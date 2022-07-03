@@ -8,6 +8,7 @@ import { SqlText } from './entities/sqlText.entity';
 import { SqlStatText } from './entities/sqlStatText.entity';
 import { Snapshot } from './entities/snapshot.entity';
 import { TopSql } from './entities/topsql.entity';
+import { Tuning } from './entities/tuning.entity';
 
 @Module({
   imports: [
@@ -18,9 +19,10 @@ import { TopSql } from './entities/topsql.entity';
       SqlStatText,
       Snapshot,
       TopSql,
+      Tuning
     ]),
   ],
   providers: [DbsResolver, DbsService],
   exports: [DbsService],
 })
-export class DbsModule {}
+export class DbsModule { }
