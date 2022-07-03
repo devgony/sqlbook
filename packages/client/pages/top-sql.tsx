@@ -3,7 +3,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import { AgGridReact } from 'ag-grid-react';
 import { NextPage } from 'next';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Table from '../components/Table';
 import {
@@ -134,6 +134,32 @@ const SqlList: NextPage = () => {
     width: 150
   }), []);
 
+  const gridRef = useRef<AgGridReact>(null);
+
+  const onSelectionChanged = useCallback(() => {
+    var selectedRows = gridRef.current!.api.getSelectedRows();
+    console.log(selectedRows);
+    // var selectedRowsString = '';
+    // var maxToShow = 5;
+    // selectedRows.forEach(function(selectedRow, index) {
+    //   if (index >= maxToShow) {
+    //     return;
+    //   }
+    //   if (index > 0) {
+    //     selectedRowsString += ', ';
+    //   }
+    //   selectedRowsString += selectedRow.athlete;
+    // });
+    // if (selectedRows.length > maxToShow) {
+    //   var othersCount = selectedRows.length - maxToShow;
+    //   selectedRowsString +=
+    //     ' and ' + othersCount + ' other' + (othersCount !== 1 ? 's' : '');
+    // }
+    // (document.querySelector(
+    //   '#selectedRows'
+    // ) as any).innerHTML = selectedRowsString;
+  }, []);
+
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="ml-4 text-xl">TOP SQL List</h1>
@@ -186,7 +212,7 @@ const SqlList: NextPage = () => {
         {/* ) : ( */}
         {/*   <Table columns={columns} data={[]} /> */}
         {/* )} */}
-        <div className="ag-theme-alpine" style={{ height: 600, width: '100%' }}>
+        <div className="mt-2 ag-theme-alpine" style={{ height: 600, width: '100%' }}>
           <AgGridReact
             // ref={gridRef} // Ref for accessing Grid's API
 
@@ -197,7 +223,8 @@ const SqlList: NextPage = () => {
 
             animateRows={true} // Optional - set to 'true' to have rows animate when sorted
             rowSelection='multiple' // Options - allows click selection of rows
-
+            ref={gridRef}
+            onSelectionChanged={onSelectionChanged}
           // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
           />
         </div>
