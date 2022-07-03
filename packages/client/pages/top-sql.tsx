@@ -1,6 +1,9 @@
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
+import { AgGridReact } from 'ag-grid-react';
 import { NextPage } from 'next';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Table from '../components/Table';
 import {
@@ -111,6 +114,26 @@ const SqlList: NextPage = () => {
       },
     });
   };
+  // const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+
+  // const [rowData] = useState([
+  //   { make: "Toyota", model: "Celica", price: 35000 },
+  //   { make: "Ford", model: "Mondeo", price: 32000 },
+  //   { make: "Porsche", model: "Boxster", price: 72000 }
+  // ]);
+
+  // Each Column Definition results in one Column.
+  const source = headers.map(header => ({ field: header }));
+  const [columnDefs, setColumnDefs] = useState(source);
+
+  // DefaultColDef sets props common to all Columns
+  const defaultColDef = useMemo(() => ({
+    resizable: true,
+    filter: true,
+    sortable: true,
+    width: 150
+  }), []);
+
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="ml-4 text-xl">TOP SQL List</h1>
@@ -158,11 +181,26 @@ const SqlList: NextPage = () => {
         </button>
       </div>
       <div>
-        {data?.findTopSqls.topSqls ? (
-          <Table columns={columns} data={data.findTopSqls.topSqls} />
-        ) : (
-          <Table columns={columns} data={[]} />
-        )}
+        {/* {data?.findTopSqls.topSqls ? ( */}
+        {/*   <Table columns={columns} data={data.findTopSqls.topSqls} /> */}
+        {/* ) : ( */}
+        {/*   <Table columns={columns} data={[]} /> */}
+        {/* )} */}
+        <div className="ag-theme-alpine" style={{ height: 600, width: '100%' }}>
+          <AgGridReact
+            // ref={gridRef} // Ref for accessing Grid's API
+
+            rowData={data?.findTopSqls.topSqls} // Row Data for Rows
+
+            columnDefs={columnDefs} // Column Defs for Columns
+            defaultColDef={defaultColDef} // Default Column Properties
+
+            animateRows={true} // Optional - set to 'true' to have rows animate when sorted
+            rowSelection='multiple' // Options - allows click selection of rows
+
+          // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+          />
+        </div>
       </div>
     </form>
   );
