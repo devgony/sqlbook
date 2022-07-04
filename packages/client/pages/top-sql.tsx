@@ -1,15 +1,21 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { gql, useLazyQuery, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { AgGridReact } from 'ag-grid-react';
 import { NextPage } from 'next';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Table from '../components/Table';
 import {
+  CreateTuningsInput,
+  CreateTuningsMutation,
+  CreateTuningsMutationVariables,
+  FindTopSqlsOutput,
   FindTopSqlsQuery,
   FindTopSqlsQueryVariables,
+  TopSql,
   TopSqlType,
+  TuningInput,
 } from '../generated/graphql';
 
 const headers = [
@@ -80,7 +86,17 @@ const FIND_TOP_SQLS = gql`
   }
 `;
 
+const CREATE_TUNINGS = gql`
+  mutation createTunings($input: CreateTuningsInput!) {
+    createTunings(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
 const SqlList: NextPage = () => {
+  const [addable, setAddable] = useState(false);
   const { register, getValues, handleSubmit, formState, watch } = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -95,6 +111,23 @@ const SqlList: NextPage = () => {
     FindTopSqlsQuery,
     FindTopSqlsQueryVariables
   >(FIND_TOP_SQLS);
+  const onCompletedTunings = (data: CreateTuningsMutation) => {
+    alert("added!")
+    // const { type, elapsedTimeMin, bufferGetMin, take, module } = getValues();
+    // const min =
+    //   type == TopSqlType.ElapsedTime ? +elapsedTimeMin : +bufferGetMin;
+    // findTopSqls({
+    //   variables: {
+    //     input: {
+    //       type,
+    //       min,
+    //       take: +take,
+    //       module,
+    //     },
+    //   },
+    // });
+  };
+  const [createTunings, { data: dataTungins, error: errorTunings }] = useMutation<CreateTuningsMutation, CreateTuningsMutationVariables>(CREATE_TUNINGS, { onCompleted: onCompletedTunings });
   const columns = useMemo(
     () => headers.map(v => ({ Header: v, accessor: v })),
     [],
@@ -160,6 +193,16 @@ const SqlList: NextPage = () => {
     // ) as any).innerHTML = selectedRowsString;
   }, []);
 
+  const addTuning = () => {
+    let topSqls: TopSql[] = gridRef.current!.api.getSelectedRows();
+    if (topSqls.length === 0) {
+      alert("please select rows first");
+      return
+    }
+    let tunings: TuningInput[] = topSqls.map(topSql => { let { __typename, ...tuning } = topSql; return tuning; });
+    createTunings({ variables: { input: { tunings: tunings } } });
+  }
+
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="ml-4 text-xl">TOP SQL List</h1>
@@ -205,6 +248,7 @@ const SqlList: NextPage = () => {
         <button type="submit" className="btn">
           Search
         </button>
+        <button className="btn" onClick={addTuning}>Add to Tuning</button>
       </div>
       <div>
         {/* {data?.findTopSqls.topSqls ? ( */}
