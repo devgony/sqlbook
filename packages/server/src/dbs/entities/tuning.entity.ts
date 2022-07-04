@@ -18,17 +18,17 @@ export class Tuning extends CoreEntity {
   @Column({ type: 'decimal', precision: 22, scale: 0, nullable: false })
   PLAN_HASH_VALUE: number;
 
-  @Field(() => String)
-  @Column({ type: 'varchar', length: 100, nullable: false })
-  ASSIGNEE: string;
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  ASSIGNEE?: string;
 
-  @Field(() => Boolean)
-  @Column({ type: 'boolean', nullable: false })
-  COMPLETED: boolean;
+  @Field(() => Boolean, { nullable: true })
+  @Column({ type: 'boolean', nullable: false, default: false })
+  COMPLETED?: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'longtext', nullable: true })
-  COMMENT: string;
+  COMMENT?: string;
 
   @Field(() => String)
   @Column({ type: 'varchar', length: 30, nullable: true })

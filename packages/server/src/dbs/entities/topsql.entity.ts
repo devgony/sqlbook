@@ -148,9 +148,9 @@ export class TopSql {
   @Field(() => String)
   @ViewColumn()
   SQL_ID: string;
-  @Field(() => String)
+  @Field(() => Number)
   @ViewColumn()
-  PLAN_HASH_VALUE: string;
+  PLAN_HASH_VALUE: number;
   @Field(() => String)
   @ViewColumn()
   PARSING_SCHEMA_NAME: string;
