@@ -1,14 +1,11 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @InputType('TuningEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
 @Entity({ name: 'TB_TUNING' })
-export class Tuning {
-  @Field(() => Number)
-  @PrimaryColumn({ type: 'decimal', precision: 22, nullable: false })
-  ID: number;
-
+export class Tuning extends CoreEntity {
   @Field(() => Number)
   @Column({ type: 'decimal', precision: 22, scale: 0, nullable: false })
   INSTANCE_NUMBER: number;
@@ -32,6 +29,7 @@ export class Tuning {
   @Field(() => String)
   @Column({ type: 'longtext', nullable: true })
   COMMENT: string;
+
   @Field(() => String)
   @Column({ type: 'varchar', length: 30, nullable: true })
   PARSING_SCHEMA_NAME: string;

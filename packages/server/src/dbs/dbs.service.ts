@@ -11,6 +11,7 @@ import {
   Repository,
 } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
+import { CreateTuningsInput, CreateTuningsOutput } from './dtos/create-tunings.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
 import {
@@ -263,6 +264,22 @@ export class DbsService {
     try {
       const tunings = await this.tunings.find();
       return { ok: true, tunings }
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error }
+    }
+  }
+
+  async createTunings({ SQL_ID, PLAN_HASH_VALUE, ...others }: CreateTuningsInput): Promise<CreateTuningsOutput> {
+    try {
+      const tuningsExists = await this.tunings.find({ where: { SQL_ID, PLAN_HASH_VALUE } });
+      if (tuningsExists) {
+        return { ok: false, error: "tunings are already exists." }
+      }
+      await this.tunings.save(
+        this.tunings.create({ SQL_ID, PLAN_HASH_VALUE, ...others })
+      );
+      return { ok: true };
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error }
