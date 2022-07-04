@@ -7,7 +7,7 @@ export class CreateDbInput extends OmitType(Db, [
   'id',
   'created_at',
   'updated_at',
-]) {}
+]) { }
 
 @ObjectType()
-export class CreateDbOutput extends ResultOutput {}
+export class CreateDbOutput extends ResultOutput { }

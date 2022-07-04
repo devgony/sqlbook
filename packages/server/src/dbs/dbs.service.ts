@@ -270,14 +270,15 @@ export class DbsService {
     }
   }
 
-  async createTunings({ SQL_ID, PLAN_HASH_VALUE, ...others }: CreateTuningsInput): Promise<CreateTuningsOutput> {
+  async createTunings({ tunings }: CreateTuningsInput): Promise<CreateTuningsOutput> {
     try {
-      const tuningsExists = await this.tunings.find({ where: { SQL_ID, PLAN_HASH_VALUE } });
+      const where = tunings.map(tuning => { tuning.SQL_ID, tuning.PLAN_HASH_VALUE });
+      const tuningsExists = await this.tunings.findOne({ where });
       if (tuningsExists) {
         return { ok: false, error: "tunings are already exists." }
       }
       await this.tunings.save(
-        this.tunings.create({ SQL_ID, PLAN_HASH_VALUE, ...others })
+        this.tunings.create(tunings)
       );
       return { ok: true };
     } catch (error) {
