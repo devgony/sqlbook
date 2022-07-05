@@ -272,7 +272,11 @@ export class DbsService {
 
   async createTunings({ tunings }: CreateTuningsInput): Promise<CreateTuningsOutput> {
     try {
-      const where = tunings.map(tuning => { tuning.SQL_ID, tuning.PLAN_HASH_VALUE });
+      const where = tunings?.map(tuning => ({ SQL_ID: tuning.SQL_ID, PLAN_HASH_VALUE: tuning.PLAN_HASH_VALUE }));
+      if (where.length == 0) {
+        return { ok: false, error: "No tunings are selected." }
+      }
+      console.log("where:", where)
       const tuningsExists = await this.tunings.findOne({ where });
       if (tuningsExists) {
         return { ok: false, error: "tunings are already exists." }
