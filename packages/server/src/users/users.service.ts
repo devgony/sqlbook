@@ -12,7 +12,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
     private readonly jwtService: JwtService, // private readonly config: ConfigService, // private readonly mailService: MailService,
-  ) {}
+  ) { }
 
   async createUser({
     username,
@@ -37,7 +37,7 @@ export class UsersService {
     try {
       const user = await this.users.findOne(
         { username },
-        { select: ['id', 'password'] },
+        { select: ['ID', 'password'] },
       );
       if (!user) {
         return { ok: false, error: '유저를 찾을 수 없습니다' };
@@ -46,7 +46,7 @@ export class UsersService {
       if (!passwordCorrect) {
         return { ok: false, error: '패스워드가 틀립니다' };
       }
-      const token = this.jwtService.sign(user.id);
+      const token = this.jwtService.sign(user.ID);
       return { ok: true, token };
     } catch (error) {
       errLog(__filename, error);

@@ -142,7 +142,7 @@ export class DbsService {
       if (!db) {
         return { ok: false, error: 'The Db does not exists' };
       }
-      this.dbs.delete(db.id);
+      this.dbs.delete(db.ID);
       return { ok: true };
     } catch (error) {
       errLog(__filename, error);

@@ -9,13 +9,13 @@ import {
 export class CoreEntity {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  id: number;
+  ID: number;
 
   @Field(() => Date)
   @CreateDateColumn()
-  created_at: Date;
+  CREATED_AT: Date;
 
   @Field(() => Date)
   @UpdateDateColumn()
-  updated_at: Date;
+  UPDATED_AT: Date;
 }

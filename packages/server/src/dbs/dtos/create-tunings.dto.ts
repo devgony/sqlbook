@@ -5,9 +5,9 @@ import { Tuning } from '../entities/tuning.entity';
 
 @InputType()
 class TuningInput extends OmitType(Tuning, [
-  'id',
-  'created_at',
-  'updated_at',
+  'ID',
+  'CREATED_AT',
+  'UPDATED_AT',
 ]) { }
 
 @InputType()
