@@ -72,7 +72,7 @@ export class DbsResolver {
     return this.dbsService.findTopSqls(findTopSqlsInput);
   }
 
-  @Query(() => FindTopSqlsOutput)
+  @Query(() => FindTuningsOutput)
   findTunings(
   ): Promise<FindTuningsOutput> {
     return this.dbsService.findTunings();
