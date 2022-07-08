@@ -8,6 +8,7 @@ import {
 import { LOCALSTORAGE_TOKEN } from './utils/const';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import { Tuning } from './generated/graphql';
 
 const token =
   typeof window !== 'undefined'
@@ -47,6 +48,9 @@ const client = new ApolloClient({
   link: from([onErrorLink, authLink.concat(httpLink)]),
   cache: new InMemoryCache({
     typePolicies: {
+      Tuning: {
+        keyFields: obj => `Tuning:${obj.SQL_ID}||${obj.PLAN_HASH_VALUE}`
+      },
       Query: {
         fields: {
           isLoggedIn: {

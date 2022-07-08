@@ -1,9 +1,10 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { AgGridReact } from 'ag-grid-react';
 import { NextPage } from 'next';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { CellEditRequestEvent } from 'ag-grid-community';
 
 const headers = [
   'CREATED_AT',
@@ -50,22 +51,45 @@ const FIND_TUNINGS = gql`
 }`
 
 const TuningHistory: NextPage = () => {
+  const client = useApolloClient();
   const { data, error } = useQuery(FIND_TUNINGS);
   console.log(data);
-  const source = headers.map(header => ({ field: header }));
+  const additionalColumnOptions = {
+    editable: true,
+    cellEditor: 'agTextCellEditor',
+    valuSetter: (v: unknown) => { console.log(v) }
+  }
+  const additionalColumnOptionsList = ['ASSIGNEE', 'COMPLETED', 'COMMENT'];
+  const source = headers.map(header => (additionalColumnOptionsList.includes(header) ? { field: header, ...additionalColumnOptions } : { field: header }));
   const [columnDefs, setColumnDefs] = useState(source);
   const defaultColDef = useMemo(() => ({
     resizable: true,
     filter: true,
     sortable: true,
-    width: 150
+    width: 150,
   }), []);
+  const onCellEditRequest = (event: CellEditRequestEvent) => {
+    console.log(event);
+    const { newValue, rowIndex, colDef: { field }, data: { SQL_ID, PLAN_HASH_VALUE } } = event;
+    if (field) {
+      client.cache.modify({
+        id: `Tuning:${SQL_ID}||${PLAN_HASH_VALUE}`,
+        fields: {
+          [field](_) {
+            return newValue
+          }
+        },
+      })
+    }
+  };
   return <div>
     <div className="mt-2 ag-theme-alpine" style={{ height: 600, width: '100%' }}>
       <AgGridReact
         rowData={data?.findTunings.tunings} // Row Data for Rows
         columnDefs={columnDefs} // Column Defs for Columns
         defaultColDef={defaultColDef} // Default Column Properties
+        readOnlyEdit={true}
+        onCellEditRequest={onCellEditRequest}
       // animateRows={true} // Optional - set to 'true' to have rows animate when sorted
       // rowSelection='multiple' // Options - allows click selection of rows
       // ref={gridRef}
