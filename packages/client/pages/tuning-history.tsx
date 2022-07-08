@@ -4,7 +4,7 @@ import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { AgGridReact } from 'ag-grid-react';
 import { NextPage } from 'next';
 import { useCallback, useMemo, useState } from 'react';
-import { CellEditRequestEvent } from 'ag-grid-community';
+import { CellEditRequestEvent, ColDef } from 'ag-grid-community';
 
 const headers = [
   'CREATED_AT',
@@ -54,14 +54,14 @@ const TuningHistory: NextPage = () => {
   const client = useApolloClient();
   const { data, error } = useQuery(FIND_TUNINGS);
   console.log(data);
-  const additionalColumnOptions = {
-    editable: true,
-    cellEditor: 'agTextCellEditor',
-    valuSetter: (v: unknown) => { console.log(v) }
-  }
-  const additionalColumnOptionsList = ['ASSIGNEE', 'COMPLETED', 'COMMENT'];
-  const source = headers.map(header => (additionalColumnOptionsList.includes(header) ? { field: header, ...additionalColumnOptions } : { field: header }));
-  const [columnDefs, setColumnDefs] = useState(source);
+  // const additionalColumnOptions = {
+  //   editable: true,
+  //   cellEditor: 'agTextCellEditor',
+  // }
+  // const additionalColumnOptionsList = ['ASSIGNEE', 'COMPLETED', 'COMMENT'];
+  // const source = headers.map(header => (additionalColumnOptionsList.includes(header) ? { field: header, ...additionalColumnOptions } : { field: header }));
+  const colDef = headers.map(header => blendColDef(header));
+  const [columnDefs, _] = useState<ColDef[]>(colDef);
   const defaultColDef = useMemo(() => ({
     resizable: true,
     filter: true,
@@ -82,6 +82,62 @@ const TuningHistory: NextPage = () => {
       })
     }
   };
+
+  const blendColDef = (header: string) => {
+    const common = { field: header };
+    switch (header) {
+      case "ASSIGNEE":
+        return {
+          ...common,
+          editable: true,
+          cellEditor: 'agTextCellEditor',
+        };
+      case "COMPLETED":
+        return {
+          ...common,
+          editable: true,
+          cellEditor: 'agRichSelectCellEditor',
+          cellEditorPopup: true,
+          cellEditorParams: {
+            values: ['Y', 'N'],
+          },
+        };
+      case "COMMENT":
+        return {
+          ...common,
+          editable: true,
+          cellEditor: 'agLargeTextCellEditor',
+          cellEditorPopup: true,
+        };
+      default:
+        return common;
+    }
+  }
+  // [{
+  //   headerName: 'Text Editor',
+  //   field: 'color1',
+  //   cellRenderer: ColourCellRenderer,
+  //   cellEditor: 'agTextCellEditor',
+  // },
+  // {
+  //   headerName: 'Rich Select Editor',
+  //   field: 'color3',
+  //   cellRenderer: ColourCellRenderer,
+  //   cellEditor: 'agRichSelectCellEditor',
+  //   cellEditorPopup: true,
+  //   cellEditorParams: {
+  //     values: colors,
+  //     cellRenderer: ColourCellRenderer,
+  //   },
+  // },
+  // {
+  //   headerName: 'Large Text Editor',
+  //   field: 'description',
+  //   cellEditorPopup: true,
+  //   cellEditor: 'agLargeTextCellEditor',
+  //   flex: 2,
+  // },
+  // ];
   return <div>
     <div className="mt-2 ag-theme-alpine" style={{ height: 600, width: '100%' }}>
       <AgGridReact
