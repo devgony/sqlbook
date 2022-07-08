@@ -1,10 +1,11 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryColumn, Unique } from 'typeorm';
 
 @InputType('TuningEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
-@Entity({ name: 'TB_TUNING' })
+@Entity({ name: "TB_TUNING" })
+@Unique("TB_TUNING_IDX1", ["SQL_ID", "PLAN_HASH_VALUE"])
 export class Tuning extends CoreEntity {
   @Field(() => Number)
   @Column({ type: 'decimal', precision: 22, scale: 0, nullable: false })
@@ -125,6 +126,4 @@ export class Tuning extends CoreEntity {
   @Field(() => Date)
   @Column({ type: 'timestamp', nullable: true })
   FIRST_EXEC_TIME: Date;
-
-
 }

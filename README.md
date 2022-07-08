@@ -17,4 +17,4 @@
 ### server
 
 - [x] alter Tuning.COMPLETED to varchar(1) {Y,N}
-- [ ] alter Tuning add primary key {SQL_ID, PLAN_HASH_VALUE}
+- [x] alter Tuning add primary key {SQL_ID, PLAN_HASH_VALUE}
