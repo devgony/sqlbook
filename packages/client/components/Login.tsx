@@ -49,7 +49,7 @@ const Login: NextPage = () => {
     });
   };
   return (
-    <div className="h-full flex justify-center items-center">
+    <section className="h-full flex justify-center items-center">
       <form
         className="flex flex-col h-48 w-80 bg-gray-200 items-center justify-around"
         onSubmit={handleSubmit(onSubmit)}
@@ -67,7 +67,7 @@ const Login: NextPage = () => {
         />
         <button className="btn">login</button>
       </form>
-    </div>
+    </section>
   );
 };
 
