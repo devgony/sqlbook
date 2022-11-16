@@ -111,8 +111,9 @@ const SqlList: NextPage = () => {
     FindTopSqlsQuery,
     FindTopSqlsQueryVariables
   >(FIND_TOP_SQLS);
+
   const onCompletedTunings = (data: CreateTuningsMutation) => {
-    alert("added!")
+    alert('added!');
     // const { type, elapsedTimeMin, bufferGetMin, take, module } = getValues();
     // const min =
     //   type == TopSqlType.ElapsedTime ? +elapsedTimeMin : +bufferGetMin;
@@ -127,7 +128,11 @@ const SqlList: NextPage = () => {
     //   },
     // });
   };
-  const [createTunings, { data: dataTungins, error: errorTunings }] = useMutation<CreateTuningsMutation, CreateTuningsMutationVariables>(CREATE_TUNINGS, { onCompleted: onCompletedTunings });
+  const [createTunings, { data: dataTungins, error: errorTunings }] =
+    useMutation<CreateTuningsMutation, CreateTuningsMutationVariables>(
+      CREATE_TUNINGS,
+      { onCompleted: onCompletedTunings },
+    );
   const columns = useMemo(
     () => headers.map(v => ({ Header: v, accessor: v })),
     [],
@@ -160,12 +165,15 @@ const SqlList: NextPage = () => {
   const [columnDefs, setColumnDefs] = useState(source);
 
   // DefaultColDef sets props common to all Columns
-  const defaultColDef = useMemo(() => ({
-    resizable: true,
-    filter: true,
-    sortable: true,
-    width: 150
-  }), []);
+  const defaultColDef = useMemo(
+    () => ({
+      resizable: true,
+      filter: true,
+      sortable: true,
+      width: 150,
+    }),
+    [],
+  );
 
   const gridRef = useRef<AgGridReact>(null);
 
@@ -196,12 +204,15 @@ const SqlList: NextPage = () => {
   const addTuning = () => {
     let topSqls: TopSql[] = gridRef.current!.api.getSelectedRows();
     if (topSqls.length === 0) {
-      alert("please select rows first");
-      return
+      alert('please select rows first');
+      return;
     }
-    let tunings: TuningInput[] = topSqls.map(topSql => { let { __typename, ...tuning } = topSql; return tuning; });
+    let tunings: TuningInput[] = topSqls.map(topSql => {
+      let { __typename, ...tuning } = topSql;
+      return tuning;
+    });
     createTunings({ variables: { input: { tunings: tunings } } });
-  }
+  };
 
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
@@ -209,8 +220,8 @@ const SqlList: NextPage = () => {
       <div className="flex">
         <div className="flex flex-col">
           <div>
-            <input type="radio" value="ELAPSED_TIME" {...register('type')} />
-            <label htmlFor="ELAPSED_TIME"> ELAPSED_TIME</label>
+            <input type="radio" value="AVG_ELAPSED_SEC" {...register('type')} />
+            <label htmlFor="AVG_ELAPSED_SEC"> AVG_ELAPSED_SEC</label>
             <label htmlFor="elapsedTimeMin">{' > '}</label>
             <input
               type="number"
@@ -248,7 +259,9 @@ const SqlList: NextPage = () => {
         <button type="submit" className="btn">
           Search
         </button>
-        <button className="btn" onClick={addTuning}>Add to Tuning</button>
+        <button className="btn" onClick={addTuning}>
+          Add to Tuning
+        </button>
       </div>
       <div>
         {/* {data?.findTopSqls.topSqls ? ( */}
@@ -256,17 +269,18 @@ const SqlList: NextPage = () => {
         {/* ) : ( */}
         {/*   <Table columns={columns} data={[]} /> */}
         {/* )} */}
-        <div className="mt-2 ag-theme-alpine" style={{ height: 600, width: '100%' }}>
+        <div
+          className="mt-2 ag-theme-alpine"
+          style={{ height: 600, width: '100%' }}
+        >
           <AgGridReact
             // ref={gridRef} // Ref for accessing Grid's API
 
             rowData={data?.findTopSqls.topSqls} // Row Data for Rows
-
             columnDefs={columnDefs} // Column Defs for Columns
             defaultColDef={defaultColDef} // Default Column Properties
-
             animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-            rowSelection='multiple' // Options - allows click selection of rows
+            rowSelection="multiple" // Options - allows click selection of rows
             ref={gridRef}
             onSelectionChanged={onSelectionChanged}
           // onCellClicked={cellClickedListener} // Optional - registering for Grid Event

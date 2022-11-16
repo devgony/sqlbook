@@ -49,7 +49,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
       Tuning: {
-        keyFields: obj => `Tuning:${obj.SQL_ID}||${obj.PLAN_HASH_VALUE}`
+        keyFields: obj => `Tuning:${obj.SQL_ID}||${obj.PLAN_HASH_VALUE}`,
       },
       Query: {
         fields: {
