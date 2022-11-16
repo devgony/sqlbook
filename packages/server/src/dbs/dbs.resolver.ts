@@ -1,8 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DbsService } from './dbs.service';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
-import { CreateTuningsInput, CreateTuningsOutput } from './dtos/create-tunings.dto';
+import {
+  CreateTuningsInput,
+  CreateTuningsOutput,
+} from './dtos/create-tunings.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
+import { EditTuningInput, EditTuningOutput } from './dtos/edit-tunings.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
 import {
   FindSqlStatTextsInput,
@@ -17,13 +21,13 @@ import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 
 @Resolver()
 export class DbsResolver {
-  constructor(private readonly dbsService: DbsService) { }
+  constructor(private readonly dbsService: DbsService) {}
 
   @Mutation(() => CreateDbOutput)
-  async createDB(
+  async createDb(
     @Args('input') createDbInput: CreateDbInput,
   ): Promise<CreateDbOutput> {
-    return this.dbsService.createDB(createDbInput);
+    return this.dbsService.createDb(createDbInput);
   }
 
   @Mutation(() => DeleteDbOutput)
@@ -73,8 +77,7 @@ export class DbsResolver {
   }
 
   @Query(() => FindTuningsOutput)
-  findTunings(
-  ): Promise<FindTuningsOutput> {
+  findTunings(): Promise<FindTuningsOutput> {
     return this.dbsService.findTunings();
   }
 
@@ -83,5 +86,12 @@ export class DbsResolver {
     @Args('input') createTuningsInput: CreateTuningsInput,
   ): Promise<CreateTuningsOutput> {
     return this.dbsService.createTunings(createTuningsInput);
+  }
+
+  @Mutation(() => EditTuningOutput)
+  editTuning(
+    @Args('input') editTuningInput: EditTuningInput,
+  ): Promise<EditTuningOutput> {
+    return this.dbsService.editTuning(editTuningInput);
   }
 }

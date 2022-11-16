@@ -11,8 +11,12 @@ import {
   Repository,
 } from 'typeorm';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
-import { CreateTuningsInput, CreateTuningsOutput } from './dtos/create-tunings.dto';
+import {
+  CreateTuningsInput,
+  CreateTuningsOutput,
+} from './dtos/create-tunings.dto';
 import { DeleteDbInput, DeleteDbOutput } from './dtos/delete-db.dto';
+import { EditTuningInput, EditTuningOutput } from './dtos/edit-tunings.dto';
 import { FindDbsOutput } from './dtos/find-dbs.dto';
 import {
   FindSqlStatTextsInput,
@@ -50,8 +54,8 @@ export class DbsService {
     @InjectRepository(Tuning)
     private readonly tunings: Repository<Tuning>,
     @InjectConnection('connOracle') private readonly ora: Connection,
-  ) { }
-  async createDB({
+  ) {}
+  async createDb({
     name,
     host,
     port,
@@ -109,6 +113,7 @@ export class DbsService {
     password,
   }: TestDbInput): Promise<TestDbOuput> {
     try {
+      console.log(port);
       // const { host, port, database, username, password } =
       //   await this.Dbs.findOne({ where: { name } });
       // if (!host) {
@@ -263,31 +268,61 @@ export class DbsService {
   async findTunings(): Promise<FindTuningsOutput> {
     try {
       const tunings = await this.tunings.find();
-      return { ok: true, tunings }
+      return { ok: true, tunings };
     } catch (error) {
       errLog(__filename, error);
-      return { ok: false, error }
+      return { ok: false, error };
     }
   }
 
-  async createTunings({ tunings }: CreateTuningsInput): Promise<CreateTuningsOutput> {
+  async createTunings({
+    tunings,
+  }: CreateTuningsInput): Promise<CreateTuningsOutput> {
     try {
-      const where = tunings?.map(tuning => ({ SQL_ID: tuning.SQL_ID, PLAN_HASH_VALUE: tuning.PLAN_HASH_VALUE }));
+      const where = tunings?.map(tuning => ({
+        SQL_ID: tuning.SQL_ID,
+        PLAN_HASH_VALUE: tuning.PLAN_HASH_VALUE,
+      }));
       if (where.length == 0) {
-        return { ok: false, error: "No tunings are selected." }
+        return { ok: false, error: 'No tunings are selected.' };
       }
-      console.log("where:", where)
+      console.log('where:', where);
       const tuningsExists = await this.tunings.findOne({ where });
       if (tuningsExists) {
-        return { ok: false, error: "tunings are already exists." }
+        return { ok: false, error: 'tunings are already exists.' };
       }
-      await this.tunings.save(
-        this.tunings.create(tunings)
-      );
+      await this.tunings.save(this.tunings.create(tunings));
       return { ok: true };
     } catch (error) {
       errLog(__filename, error);
-      return { ok: false, error }
+      return { ok: false, error };
+    }
+  }
+
+  async editTuning({
+    SQL_ID,
+    PLAN_HASH_VALUE,
+    ASSIGNEE,
+    COMPLETED,
+    COMMENT,
+  }: EditTuningInput): Promise<EditTuningOutput> {
+    try {
+      const tuning = await this.tunings.findOne({
+        where: { SQL_ID, PLAN_HASH_VALUE },
+      });
+      if (!tuning) {
+        return { ok: false, error: 'cannot find tuning' };
+      }
+      this.tunings.save({
+        ...tuning,
+        ASSIGNEE,
+        COMPLETED,
+        COMMENT,
+      });
+      return { ok: true, SQL_ID, PLAN_HASH_VALUE };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error };
     }
   }
 }
