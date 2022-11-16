@@ -121,13 +121,13 @@ export class DbsService {
       // }
       // do sth
       const connection = await createConnection({
-        type: 'mysql',
+        type: 'oracle',
         name,
         host,
         port,
         username,
         password,
-        database: schema,
+        serviceName: schema,
       });
       if (!connection.isConnected) {
         return { ok: false, error: 'Connection failed' };
