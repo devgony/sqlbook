@@ -27,6 +27,7 @@ import { FindTuningsOutput } from './dtos/find-tunings.dto';
 import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
+import { GatherInput, GatherOutput } from './dtos/gather.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 import { Db } from './entities/dbs.entity';
 import { Snapshot } from './entities/snapshot.entity';
@@ -191,6 +192,52 @@ export class DbsService {
       return { ok: true };
     } catch (error) {
       errLog(__filename, error);
+      return { ok: false, error };
+    }
+  }
+
+  async gather(input: GatherInput): Promise<GatherOutput> {
+    try {
+      const {
+        name,
+        host,
+        port,
+        username,
+        password,
+        schema: serviceName,
+      } = await this.dbs.findOne({
+        where: { name: input.name },
+      });
+
+      const connection = await createConnection({
+        type: 'oracle',
+        name,
+        host,
+        port,
+        username,
+        password,
+        serviceName,
+      });
+
+      if (!connection.isConnected) {
+        return { ok: false, error: 'Connection failed' };
+      }
+
+      const sqlHist: SqlStat[] = await connection.query(querySqlStat);
+      await this.sqlHists.insert(sqlHist);
+
+      const sqlTexts: SqlText[] = await connection.query(querySqlText);
+      await this.sqlTexts.upsert(sqlTexts, {
+        conflictPaths: ['DBID', 'SQL_ID'],
+      });
+
+      const snapshots: Snapshot[] = await connection.query(querySnapshot);
+      await this.snapshots.upsert(snapshots, {
+        conflictPaths: ['DBID', 'SNAP_ID'],
+      });
+
+      return { ok: true };
+    } catch (error) {
       return { ok: false, error };
     }
   }

@@ -17,6 +17,7 @@ import { FindTuningsOutput } from './dtos/find-tunings.dto';
 import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
+import { GatherInput, GatherOutput } from './dtos/gather.dto';
 import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 
 @Resolver()
@@ -60,6 +61,11 @@ export class DbsResolver {
   @Query(() => GatherSnapshotOutput)
   async gatherSnapshot(): Promise<GatherSnapshotOutput> {
     return this.dbsService.gatherSnapshot();
+  }
+
+  @Query(() => GatherOutput)
+  async gather(@Args('input') gatherInput: GatherInput): Promise<GatherOutput> {
+    return this.dbsService.gather(gatherInput);
   }
 
   @Query(() => FindSqlStatTextsOutput)
