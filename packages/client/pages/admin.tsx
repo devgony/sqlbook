@@ -22,6 +22,9 @@ import {
   TestDbQuery,
   CreateDbMutation,
   CreateDbMutationVariables,
+  DeleteDbMutation,
+  DeleteDbMutationVariables,
+  GatherQuery,
 } from '../generated/graphql';
 
 // export const getServerSideProps = () => {
@@ -73,8 +76,40 @@ const CREATE_DB = gql`
   }
 `;
 
+const DELETE_DB = gql`
+  mutation deleteDb($input: DeleteDbInput!) {
+    deleteDb(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
+const GATHER = gql`
+  query gather($input: GatherInput!) {
+    gather(input: $input) {
+      ok
+      error
+    }
+  }
+`;
+
 const AdminBody = () => {
   const [testRequired, setTestRequired] = useState(true);
+  const [targetDb, setTargetDb] = useState('');
+
+  const onCompletedGather = (data: GatherQuery) => {
+    const { ok, error } = data.gather;
+    if (!ok) {
+      console.log(error);
+      return alert(error);
+    }
+    return alert('Gathering SQL completed!');
+  };
+  const [gather, { data: dataGather }] = useLazyQuery<GatherQuery>(GATHER, {
+    onCompleted: onCompletedGather,
+  });
+
   const { register, getValues, handleSubmit, formState, watch } =
     useForm<TestDbInput>({
       mode: 'onChange',
@@ -88,6 +123,7 @@ const AdminBody = () => {
       // },
     });
   const { data, error, refetch } = useQuery<FindDbsQuery>(FIND_DBS);
+
   const onCompletedCreateDb = (data: CreateDbMutation) => {
     const { ok, error } = data.createDb;
     if (!ok) {
@@ -101,6 +137,20 @@ const AdminBody = () => {
     CreateDbMutation,
     CreateDbMutationVariables
   >(CREATE_DB, { onCompleted: onCompletedCreateDb });
+
+  const onCompletedDeleteDb = (data: DeleteDbMutation) => {
+    const { ok, error } = data.deleteDb;
+    if (!ok) {
+      alert(error);
+      return;
+    }
+    refetch();
+  };
+  const [deleteDb, { data: dataDeleteDb }] = useMutation<
+    DeleteDbMutation,
+    DeleteDbMutationVariables
+  >(DELETE_DB, { onCompleted: onCompletedDeleteDb });
+
   const onCompletedTestDb = (data: TestDbQuery) => {
     const { ok, error } = data.testDb;
     if (!ok) {
@@ -113,6 +163,7 @@ const AdminBody = () => {
   const [testDb, { data: dataTestDb }] = useLazyQuery(TEST_DB, {
     onCompleted: onCompletedTestDb,
   });
+
   const [adding, setAdding] = useState(false);
   const onSubmit: SubmitHandler<TestDbInput> = data => {
     const { port, ...others } = data;
@@ -124,6 +175,15 @@ const AdminBody = () => {
     console.log(port, others);
     testDb({ variables: { input: { port: +port, ...others } } });
   };
+
+  const runDeleteDb = (name: string) => {
+    const ok = window.confirm(`Delete ${name}?`);
+    if (ok) {
+      deleteDb({ variables: { input: { name } } });
+    }
+  };
+
+  const collect = () => { };
 
   return (
     <div className="flex flex-col h-96 bg-gray-300 items-center mt-12 text-sm">
@@ -142,14 +202,24 @@ const AdminBody = () => {
         <span></span>
         {data?.findDbs.dbs.map((db, i) => (
           <Fragment key={i}>
-            <input type="radio" readOnly={true} />
+            <input
+              type="radio"
+              name="chosen-db"
+              onClick={() => setTargetDb(db.name)}
+            />
             <input value={db.name} readOnly={true} />
             <input value={db.host} readOnly={true} />
             <input value={db.port} readOnly={true} />
             <input value={db.schema} readOnly={true} />
             <input value={db.username} readOnly={true} />
             <input name="password" value={db.password} readOnly={true} />
-            <button className="btn">DELETE</button>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => runDeleteDb(db.name)}
+            >
+              Delete
+            </button>
             <span />
           </Fragment>
         ))}
@@ -170,6 +240,7 @@ const AdminBody = () => {
             </button>
             <button
               onClick={() => { }}
+              // todo - handle lazy tailwind
               className={`btn ${testRequired ? 'bg-gray-400' : ''}`}
               disabled={testRequired}
               type="submit"
@@ -192,7 +263,12 @@ const AdminBody = () => {
           </>
         )}
       </form>
-      <button className="btn">Collect SQL</button>
+      <button
+        className="btn"
+        onClick={() => gather({ variables: { input: { name: targetDb } } })}
+      >
+        Gather SQL
+      </button>
     </div>
   );
 };
