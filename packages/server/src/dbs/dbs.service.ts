@@ -236,9 +236,11 @@ export class DbsService {
         conflictPaths: ['DBID', 'SNAP_ID'],
       });
 
+      connection.close();
       return { ok: true };
     } catch (error) {
-      return { ok: false, error };
+      errLog(__filename, error);
+      return { ok: false, error: getErrorMessage(error) };
     }
   }
 
