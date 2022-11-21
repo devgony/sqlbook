@@ -51,7 +51,7 @@ const Login: NextPage = () => {
   return (
     <section className="h-full flex justify-center items-center">
       <form
-        className="flex flex-col h-48 w-80 bg-gray-200 items-center justify-around"
+        className="flex flex-col h-48 w-80 bg-red-100 items-center justify-around"
         onSubmit={handleSubmit(onSubmit)}
       >
         <h1>Please Login with admin</h1>
@@ -65,7 +65,7 @@ const Login: NextPage = () => {
           placeholder="password"
           {...register('password')}
         />
-        <button className="btn">login</button>
+        <button className="btn">Login</button>
       </form>
     </section>
   );

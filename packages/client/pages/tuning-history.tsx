@@ -4,6 +4,7 @@ import {
   gql,
   MutationUpdaterFn,
   useApolloClient,
+  useLazyQuery,
   useMutation,
   useQuery,
 } from '@apollo/client';
@@ -14,11 +15,16 @@ import { CellEditRequestEvent, ColDef } from 'ag-grid-community';
 import {
   EditTuningMutation,
   EditTuningMutationVariables,
+  FindDbsQuery,
   FindTuningsQuery,
+  FindTuningsQueryVariables,
 } from '../generated/graphql';
+import { useForm } from 'react-hook-form';
+import { FIND_DBS_NAME } from '../utils/gqls';
 
 const headers = [
   'CREATED_AT',
+  'DBID',
   'INSTANCE_NUMBER',
   'SQL_ID',
   'PLAN_HASH_VALUE',
@@ -52,11 +58,12 @@ const headers = [
 ];
 // const gqlProjection = headers.reduce((acc, cur) => `${acc}\n${cur}`);
 const FIND_TUNINGS = gql`
-  query findTunings {
-    findTunings {
+  query findTunings($input: FindTuningsInput!) {
+    findTunings(input: $input) {
       ok
       tunings {
         CREATED_AT
+        DBID
         INSTANCE_NUMBER
         SQL_ID
         PLAN_HASH_VALUE
@@ -196,7 +203,7 @@ const EDIT_TUNING = gql`
 
 const TuningHistory: NextPage = () => {
   // const client = useApolloClient();
-  const onCompleted = () => {};
+  const onCompleted = () => { };
   const editTuningUpdate: MutationUpdaterFn<EditTuningMutation> = (
     cache,
     result,
@@ -223,7 +230,10 @@ const TuningHistory: NextPage = () => {
     onCompleted,
     update: editTuningUpdate,
   });
-  const { data, error } = useQuery<FindTuningsQuery>(FIND_TUNINGS);
+  const [findTunings, { data, error }] = useLazyQuery<
+    FindTuningsQuery,
+    FindTuningsQueryVariables
+  >(FIND_TUNINGS);
   console.log(data);
   const blendColDef = (header: string) => {
     const common = { field: header };
@@ -266,7 +276,6 @@ const TuningHistory: NextPage = () => {
     [],
   );
   const onCellEditRequest = (event: CellEditRequestEvent) => {
-    console.log(event);
     const {
       newValue,
       rowIndex,
@@ -280,24 +289,47 @@ const TuningHistory: NextPage = () => {
       });
     }
   };
+
+  const { register, getValues, handleSubmit, formState, watch } = useForm({
+    mode: 'onChange',
+  });
+  const { data: dataFindDbsName } = useQuery<FindDbsQuery>(FIND_DBS_NAME);
+  const handleChange = () => {
+    const name = getValues('targetDb');
+    findTunings({ variables: { input: { name } } });
+  };
   return (
     <div>
-      <div
+      <h1 className="ml-4 mt-8 text-xl">Tuning History</h1>
+      <form
         className="mt-2 ag-theme-alpine"
         style={{ height: 600, width: '100%' }}
       >
+        <select
+          {...register('targetDb')}
+          onChange={e => {
+            register('targetDb').onChange(e);
+            handleChange();
+          }}
+          id="db-select"
+        >
+          <option value="">Choose a database</option>
+          {dataFindDbsName?.findDbs.dbs.map(db => (
+            <option value={db.name}>{db.name}</option>
+          ))}
+        </select>
         <AgGridReact
           rowData={data?.findTunings.tunings} // Row Data for Rows
           columnDefs={columnDefs} // Column Defs for Columns
           defaultColDef={defaultColDef} // Default Column Properties
           readOnlyEdit={true}
           onCellEditRequest={onCellEditRequest}
-          // animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-          // rowSelection='multiple' // Options - allows click selection of rows
-          // ref={gridRef}
-          // onSelectionChanged={onSelectionChanged}
+        // animateRows={true} // Optional - set to 'true' to have rows animate when sorted
+        // rowSelection='multiple' // Options - allows click selection of rows
+        // ref={gridRef}
+        // onSelectionChanged={onSelectionChanged}
         />
-      </div>
+      </form>
     </div>
   );
 };

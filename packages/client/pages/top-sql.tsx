@@ -10,6 +10,8 @@ import {
   CreateTuningsInput,
   CreateTuningsMutation,
   CreateTuningsMutationVariables,
+  FindDbsQuery,
+  FindTopSqlsInput,
   FindTopSqlsOutput,
   FindTopSqlsQuery,
   FindTopSqlsQueryVariables,
@@ -17,8 +19,10 @@ import {
   TopSqlType,
   TuningInput,
 } from '../generated/graphql';
+import { FIND_DBS_NAME } from '../utils/gqls';
 
 const headers = [
+  'DBID',
   'INSTANCE_NUMBER',
   'SQL_ID',
   'PLAN_HASH_VALUE',
@@ -54,6 +58,7 @@ const FIND_TOP_SQLS = gql`
       ok
       error
       topSqls {
+        DBID
         INSTANCE_NUMBER
         SQL_ID
         PLAN_HASH_VALUE
@@ -97,6 +102,7 @@ const CREATE_TUNINGS = gql`
 
 const SqlList: NextPage = () => {
   const [addable, setAddable] = useState(false);
+  const { data: dataFindDbsName } = useQuery<FindDbsQuery>(FIND_DBS_NAME);
   const { register, getValues, handleSubmit, formState, watch } = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -105,8 +111,10 @@ const SqlList: NextPage = () => {
       bufferGetMin: 50000,
       take: 30,
       module: '%',
+      targetDb: dataFindDbsName?.findDbs.dbs[0].name,
     },
   });
+
   const [findTopSqls, { data, error }] = useLazyQuery<
     FindTopSqlsQuery,
     FindTopSqlsQueryVariables
@@ -138,19 +146,26 @@ const SqlList: NextPage = () => {
     [],
   );
   const onSubmit = () => {
-    const { type, elapsedTimeMin, bufferGetMin, take, module } = getValues();
+    const { type, elapsedTimeMin, bufferGetMin, take, module, targetDb } =
+      getValues();
+    console.log(targetDb);
     const min =
       type == TopSqlType.ElapsedTime ? +elapsedTimeMin : +bufferGetMin;
-    findTopSqls({
-      variables: {
-        input: {
-          type,
-          min,
-          take: +take,
-          module,
+    if (targetDb) {
+      findTopSqls({
+        variables: {
+          input: {
+            type,
+            min,
+            take: +take,
+            module,
+            targetDb,
+          },
         },
-      },
-    });
+      });
+    } else {
+      alert('Choose db to search');
+    }
   };
   // const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
 
@@ -217,6 +232,13 @@ const SqlList: NextPage = () => {
   return (
     <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="ml-4 text-xl">TOP SQL List</h1>
+      {/* <label htmlFor="db-select">Choose a database:</label> */}
+      <select {...register('targetDb')} id="db-select">
+        <option>Choose a database</option>
+        {dataFindDbsName?.findDbs.dbs.map(db => (
+          <option value={db.name}>{db.name}</option>
+        ))}
+      </select>
       <div className="flex">
         <div className="flex flex-col">
           <div>
@@ -259,7 +281,7 @@ const SqlList: NextPage = () => {
         <button type="submit" className="btn">
           Search
         </button>
-        <button className="btn" onClick={addTuning}>
+        <button className="btn ml-1" onClick={addTuning}>
           Add to Tuning
         </button>
       </div>

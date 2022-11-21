@@ -186,89 +186,92 @@ const AdminBody = () => {
   const collect = () => { };
 
   return (
-    <div className="flex flex-col h-96 bg-gray-300 items-center mt-12 text-sm">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full bg-red-200 grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center"
-      >
-        <span />
-        <span>NAME</span>
-        <span>HOST</span>
-        <span>PORT</span>
-        <span>SERVICE_NAME</span>
-        <span>USER</span>
-        <span>PASSWORD</span>
-        <span></span>
-        <span></span>
-        {data?.findDbs.dbs.map((db, i) => (
-          <Fragment key={i}>
-            <input
-              type="radio"
-              name="chosen-db"
-              onClick={() => setTargetDb(db.name)}
-            />
-            <input value={db.name} readOnly={true} />
-            <input value={db.host} readOnly={true} />
-            <input value={db.port} readOnly={true} />
-            <input value={db.schema} readOnly={true} />
-            <input value={db.username} readOnly={true} />
-            <input name="password" value={db.password} readOnly={true} />
-            <button
-              type="button"
-              className="btn"
-              onClick={() => runDeleteDb(db.name)}
-            >
-              Delete
-            </button>
-            <span />
-          </Fragment>
-        ))}
-        {adding ? (
-          <>
-            <span />
-            <input {...register('name', { required: true })} />
-            <input {...register('host', { required: true })} />
-            <input {...register('port', { required: true })} />
-            <input {...register('schema', { required: true })} />
-            <input {...register('username', { required: true })} />
-            <input
-              {...register('password', { required: true })}
-              type="password"
-            />
-            <button className="btn" onClick={runTest} type="button">
-              Test
-            </button>
-            <button
-              onClick={() => { }}
-              // todo - handle lazy tailwind
-              className={`btn ${testRequired ? 'bg-gray-400' : ''}`}
-              disabled={testRequired}
-              type="submit"
-            >
-              Save
-            </button>
-          </>
-        ) : (
-          <>
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <span />
-            <button className="btn" onClick={() => setAdding(true)}>
-              Add
-            </button>
-          </>
-        )}
-      </form>
-      <button
-        className="btn"
-        onClick={() => gather({ variables: { input: { name: targetDb } } })}
-      >
-        Gather SQL
-      </button>
+    <div>
+      <h1 className="ml-4 mt-8 text-xl">Databases to gather SQL</h1>
+      <div className="flex flex-col h-96 items-center text-sm">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full bg-red-100 grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center"
+        >
+          <span />
+          <span>NAME</span>
+          <span>HOST</span>
+          <span>PORT</span>
+          <span>SERVICE_NAME</span>
+          <span>USER</span>
+          <span>PASSWORD</span>
+          <span></span>
+          <span></span>
+          {data?.findDbs.dbs.map((db, i) => (
+            <Fragment key={i}>
+              <input
+                type="radio"
+                name="chosen-db"
+                onClick={() => setTargetDb(db.name)}
+              />
+              <input value={db.name} readOnly={true} />
+              <input value={db.host} readOnly={true} />
+              <input value={db.port} readOnly={true} />
+              <input value={db.schema} readOnly={true} />
+              <input value={db.username} readOnly={true} />
+              <input name="password" value={db.password} readOnly={true} />
+              <button
+                type="button"
+                className="btn"
+                onClick={() => runDeleteDb(db.name)}
+              >
+                Delete
+              </button>
+              <span />
+            </Fragment>
+          ))}
+          {adding ? (
+            <>
+              <span />
+              <input {...register('name', { required: true })} />
+              <input {...register('host', { required: true })} />
+              <input {...register('port', { required: true })} />
+              <input {...register('schema', { required: true })} />
+              <input {...register('username', { required: true })} />
+              <input
+                {...register('password', { required: true })}
+                type="password"
+              />
+              <button className="btn" onClick={runTest} type="button">
+                Test
+              </button>
+              <button
+                onClick={() => { }}
+                // todo - handle lazy tailwind
+                className={`btn ${testRequired ? 'bg-gray-400' : ''}`}
+                disabled={testRequired}
+                type="submit"
+              >
+                Save
+              </button>
+            </>
+          ) : (
+            <>
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <button className="btn" onClick={() => setAdding(true)}>
+                Add
+              </button>
+            </>
+          )}
+        </form>
+        <button
+          className="btn"
+          onClick={() => gather({ variables: { input: { name: targetDb } } })}
+        >
+          Gather SQL
+        </button>
+      </div>
     </div>
   );
 };
