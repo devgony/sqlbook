@@ -31,6 +31,9 @@ export class FindTopSqlsInput {
 
   @Field(() => String)
   module: string;
+
+  @Field(() => String)
+  targetDb: string;
 }
 
 @ObjectType()

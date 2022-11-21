@@ -39,7 +39,8 @@ import { SqlStat } from './sqlStat.entity';
       SELECT * FROM (
           SELECT * FROM (
               SELECT /*+ LEADING(C, A, B) USE_HASH(A, B) FULL(B) NO_MERGE(C) NO_MERGE(A) NO_MERGE(B) */
-                A.INSTANCE_NUMBER
+                A.DBID
+              , A.INSTANCE_NUMBER
               , A.SQL_ID
               , A.PLAN_HASH_VALUE 
               , A.PARSING_SCHEMA_NAME
@@ -68,7 +69,8 @@ import { SqlStat } from './sqlStat.entity';
               , C.FIRST_EXEC_TIME
               FROM (
               SELECT /*+ LEADING(B, A) USE_HASH(A) FULL(B) FULL(A) NO_MERGE(B) NO_MERGE(A) */
-                A.INSTANCE_NUMBER
+                A.DBID
+              , A.INSTANCE_NUMBER
               , A.SQL_ID
               , A.PLAN_HASH_VALUE 
               , A.PARSING_SCHEMA_NAME
@@ -90,6 +92,7 @@ import { SqlStat } from './sqlStat.entity';
               AND A.DBID = B.DBID
               AND A.INSTANCE_NUMBER = B.INSTANCE_NUMBER
               GROUP BY
+              A.DBID,
               A.INSTANCE_NUMBER,
               A.SQL_ID
               , A.PLAN_HASH_VALUE 
@@ -142,6 +145,9 @@ import { SqlStat } from './sqlStat.entity';
 --   ORDER BY AVG_ELAPSED_SEC DESC`,
 })
 export class TopSql {
+  @Field(() => Number)
+  @ViewColumn()
+  DBID: number;
   @Field(() => Number)
   @ViewColumn()
   INSTANCE_NUMBER: number;

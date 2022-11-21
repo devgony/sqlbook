@@ -5,9 +5,10 @@ import { Db } from '../entities/dbs.entity';
 @InputType()
 export class TestDbInput extends OmitType(Db, [
   'ID',
+  'dbid',
   'CREATED_AT',
   'UPDATED_AT',
-]) { }
+]) {}
 
 @ObjectType()
-export class TestDbOuput extends ResultOutput { }
+export class TestDbOuput extends ResultOutput {}

@@ -4,9 +4,13 @@ import { Column, Entity, Index, PrimaryColumn, Unique } from 'typeorm';
 
 @InputType('TuningEntity', { isAbstract: true }) // to get input as InputType
 @ObjectType()
-@Entity({ name: "TB_TUNING" })
-@Unique("TB_TUNING_IDX1", ["SQL_ID", "PLAN_HASH_VALUE"])
+@Entity({ name: 'TB_TUNING' })
+@Unique('TB_TUNING_IDX1', ['SQL_ID', 'PLAN_HASH_VALUE'])
 export class Tuning extends CoreEntity {
+  @Field(() => Number)
+  @Column({ type: 'decimal', precision: 22, scale: 0, nullable: false })
+  DBID: number;
+
   @Field(() => Number)
   @Column({ type: 'decimal', precision: 22, scale: 0, nullable: false })
   INSTANCE_NUMBER: number;

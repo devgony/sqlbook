@@ -23,7 +23,7 @@ import {
   FindSqlStatTextsOutput,
 } from './dtos/find-sql-stat-texts.dto';
 import { FindTopSqlsInput, FindTopSqlsOutput } from './dtos/find-topsqls.dto';
-import { FindTuningsOutput } from './dtos/find-tunings.dto';
+import { FindTuningsInput, FindTuningsOutput } from './dtos/find-tunings.dto';
 import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
@@ -69,7 +69,7 @@ export class DbsService {
         where: { host, port, schema },
       });
       if (dbExists) {
-        return { ok: false, error: ' DB already exists.' };
+        return { ok: false, error: 'DB already exists.' };
       }
       const nameExists = await this.dbs.findOne({
         where: { name },
@@ -80,8 +80,26 @@ export class DbsService {
           error: 'The name already exists',
         };
       }
+
+      const connection = await createConnection({
+        type: 'oracle',
+        name,
+        host,
+        port,
+        username,
+        password,
+        serviceName: schema,
+      });
+      if (!connection.isConnected) {
+        return { ok: false, error: 'Connection failed' };
+      }
+      const db = await connection.query('SELECT DBID FROM V$DATABASE');
+
+      const dbid = db[0].DBID;
+
       await this.dbs.save(
         this.dbs.create({
+          dbid,
           name,
           host,
           port,
@@ -90,9 +108,11 @@ export class DbsService {
           password,
         }),
       );
+
+      connection.close();
       return { ok: true };
     } catch (error) {
-      return { ok: false, error: 'Could not create DB' };
+      return { ok: false, error: getErrorMessage(error) };
     }
   }
 
@@ -141,6 +161,16 @@ export class DbsService {
       return { ok: false, error: getErrorMessage(error) };
     }
   }
+
+  // async execQuery({
+  //   name,
+  //   host,
+  //   port,
+  //   schema,
+  //   username,
+  //   password,
+  // }: TestDbInput) {
+  // }
 
   async deleteDb({ name }: DeleteDbInput): Promise<DeleteDbOutput> {
     try {
@@ -290,6 +320,7 @@ export class DbsService {
     min,
     take,
     module,
+    targetDb,
   }: FindTopSqlsInput): Promise<FindTopSqlsOutput> {
     try {
       const where =
@@ -298,6 +329,13 @@ export class DbsService {
           : { BUFFER_GETS_TOTAL: MoreThan(min) };
 
       where['MODULE'] = Like(`%${module}%`);
+
+      const target = await this.dbs.findOne({ where: { name: targetDb } });
+      console.log(target);
+
+      if (target) {
+        where['DBID'] = target.dbid;
+      }
 
       const topSqls = await this.topSqls.find({
         where,
@@ -314,10 +352,15 @@ export class DbsService {
     }
   }
 
-  async findTunings(): Promise<FindTuningsOutput> {
+  async findTunings({ name }: FindTuningsInput): Promise<FindTuningsOutput> {
     try {
-      const tunings = await this.tunings.find();
-      return { ok: true, tunings };
+      const db = await this.dbs.findOne({ where: { name } });
+      if (db) {
+        const DBID = db.dbid;
+        const tunings = await this.tunings.find({ where: { DBID } });
+        return { ok: true, tunings };
+      }
+      return { ok: false, error: 'could not find db' };
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error };

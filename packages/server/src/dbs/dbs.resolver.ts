@@ -13,7 +13,7 @@ import {
   FindSqlStatTextsOutput,
 } from './dtos/find-sql-stat-texts.dto';
 import { FindTopSqlsInput, FindTopSqlsOutput } from './dtos/find-topsqls.dto';
-import { FindTuningsOutput } from './dtos/find-tunings.dto';
+import { FindTuningsInput, FindTuningsOutput } from './dtos/find-tunings.dto';
 import { GatherSnapshotOutput } from './dtos/gather-snapshot-dto';
 import { GatherSqlStatOutput } from './dtos/gather-sql-stat.dto';
 import { GatherSqlTextOutput } from './dtos/gather-sql-text.dto';
@@ -83,8 +83,10 @@ export class DbsResolver {
   }
 
   @Query(() => FindTuningsOutput)
-  findTunings(): Promise<FindTuningsOutput> {
-    return this.dbsService.findTunings();
+  findTunings(
+    @Args('input') findTuningsInput: FindTuningsInput,
+  ): Promise<FindTuningsOutput> {
+    return this.dbsService.findTunings(findTuningsInput);
   }
 
   @Mutation(() => CreateTuningsOutput)

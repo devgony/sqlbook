@@ -7,6 +7,10 @@ import { Column, Entity, Unique } from 'typeorm';
 @Entity()
 @Unique(['host', 'port', 'schema'])
 export class Db extends CoreEntity {
+  @Field(() => Int, { nullable: false })
+  @Column({ unique: true, nullable: false })
+  dbid: number;
+
   @Field(() => String, { nullable: false })
   @Column({ unique: true, nullable: false })
   name: string;
