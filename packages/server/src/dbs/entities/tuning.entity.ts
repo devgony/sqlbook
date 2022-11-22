@@ -19,8 +19,8 @@ export class Tuning extends CoreEntity {
   @Column({ type: 'varchar', length: 13, nullable: false })
   SQL_ID: string;
 
-  @Field(() => Number)
-  @Column({ type: 'decimal', precision: 22, scale: 0, nullable: false })
+  @Field(() => Number, { nullable: true })
+  @Column({ type: 'decimal', precision: 22, scale: 0, nullable: true })
   PLAN_HASH_VALUE: number;
 
   @Field(() => String, { nullable: true })
@@ -28,106 +28,106 @@ export class Tuning extends CoreEntity {
   ASSIGNEE?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ type: 'varchar', length: 1, nullable: false, default: 'N' })
+  @Column({ type: 'varchar', length: 1, nullable: true, default: 'N' })
   COMPLETED?: string;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'longtext', nullable: true })
   COMMENT?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 30, nullable: true })
-  PARSING_SCHEMA_NAME: string;
+  PARSING_SCHEMA_NAME?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 64, nullable: true })
-  MODULE: string;
+  MODULE?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 13, nullable: true })
-  JOB_NAME: string;
+  JOB_NAME?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'longtext', nullable: true })
-  SQL_TEXT: string;
+  SQL_TEXT?: string;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 44, scale: 0, nullable: true })
-  EXECUTIONS: number;
+  EXECUTIONS?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 44, scale: 0, nullable: true })
-  BUFFER_GETS_TOTAL: number;
+  BUFFER_GETS_TOTAL?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 44, scale: 0, nullable: true })
-  ROWS_PROCESSED: number;
+  ROWS_PROCESSED?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  TOTAL_ELAPSED_MIN: number;
+  TOTAL_ELAPSED_MIN?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 45, scale: 0, nullable: true })
-  AVG_ROWS: number;
+  AVG_ROWS?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  AVG_ELAPSED_SEC: number;
+  AVG_ELAPSED_SEC?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 45, scale: 0, nullable: true })
-  AVG_BUFFER_GETS: number;
+  AVG_BUFFER_GETS?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 46, scale: 1, nullable: true })
-  AVG_DISK_READS: number;
+  AVG_DISK_READS?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  TOTAL_CPU_MIN: number;
+  TOTAL_CPU_MIN?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  TOTAL_IOWAIT_MIN: number;
+  TOTAL_IOWAIT_MIN?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  TOTAL_CLWAIT_MIN: number;
+  TOTAL_CLWAIT_MIN?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  TOTAL_APWAIT_MIN: number;
+  TOTAL_APWAIT_MIN?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  TOTAL_CCWAIT_MIN: number;
+  TOTAL_CCWAIT_MIN?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  AVG_CPU_SEC: number;
+  AVG_CPU_SEC?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  AVG_IOWAIT_SEC: number;
+  AVG_IOWAIT_SEC?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  AVG_CLWAIT_SEC: number;
+  AVG_CLWAIT_SEC?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  AVG_APWAIT_SEC: number;
+  AVG_APWAIT_SEC?: number;
 
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @Column({ type: 'decimal', precision: 51, scale: 6, nullable: true })
-  AVG_CCWAIT_SEC: number;
+  AVG_CCWAIT_SEC?: number;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  LAST_EXEC_TIME: Date;
+  LAST_EXEC_TIME?: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  FIRST_EXEC_TIME: Date;
+  FIRST_EXEC_TIME?: Date;
 }
