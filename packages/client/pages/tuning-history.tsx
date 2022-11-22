@@ -197,6 +197,11 @@ const EDIT_TUNING = gql`
     editTuning(input: $input) {
       ok
       error
+      SQL_ID
+      PLAN_HASH_VALUE
+      ASSIGNEE
+      COMPLETED
+      COMMENT
     }
   }
 `;
@@ -212,16 +217,32 @@ const TuningHistory: NextPage = () => {
       alert('failed to edit');
       return;
     }
-    // const { SQL_ID, PLAN_HASH_VALUE } = result.data.editTuning;
-    // let a = result.data?.editTuning && result.data.editTuning.SQL_ID;
-    // cache.modify({
-    //   id: `Tuning:${SQL_ID}||${PLAN_HASH_VALUE}`,
-    //   fields: {
-    //     [field](_) {
-    //       return newValue;
-    //     },
-    //   },
-    // });
+    console.log('here');
+    const { SQL_ID, PLAN_HASH_VALUE, ASSIGNEE, COMPLETED, COMMENT } =
+      result.data.editTuning;
+    console.log(result.data.editTuning);
+    if (SQL_ID && PLAN_HASH_VALUE) {
+      cache.writeFragment({
+        id: `Tuning:${SQL_ID}||${PLAN_HASH_VALUE}`,
+        fragment: gql`
+          fragment MyTuning on Tuning {
+            ASSIGNEE
+            COMPLETED
+            COMMENT
+          }
+        `,
+        data: {
+          ASSIGNEE,
+          COMPLETED,
+          COMMENT,
+        },
+        // fields: {
+        //   [field](_) {
+        //     return newValue;
+        //   },
+        // },
+      });
+    }
   };
   const [editTuning, { data: dataEditTuning }] = useMutation<
     EditTuningMutation,
@@ -299,13 +320,14 @@ const TuningHistory: NextPage = () => {
     findTunings({ variables: { input: { name } } });
   };
   return (
-    <div>
-      <h1 className="ml-4 mt-8 text-xl">Tuning History</h1>
+    <div className="ml-2">
+      <h1 className="mt-8 text-xl">Tuning History</h1>
       <form
         className="mt-2 ag-theme-alpine"
         style={{ height: 600, width: '100%' }}
       >
         <select
+          className="text-xl my-2"
           {...register('targetDb')}
           onChange={e => {
             register('targetDb').onChange(e);
