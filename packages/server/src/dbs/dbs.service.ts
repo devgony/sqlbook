@@ -59,7 +59,7 @@ export class DbsService {
     @InjectRepository(Tuning)
     private readonly tunings: Repository<Tuning>,
     @InjectConnection('connOracle') private readonly ora: Connection,
-  ) { }
+  ) {}
   async createDb({
     name,
     host,
@@ -409,13 +409,21 @@ export class DbsService {
       if (!tuning) {
         return { ok: false, error: 'cannot find tuning' };
       }
-      this.tunings.save({
+      await this.tunings.save({
         ...tuning,
         ASSIGNEE,
         COMPLETED,
         COMMENT,
       });
-      return { ok: true, SQL_ID, PLAN_HASH_VALUE };
+      const updated = await this.tunings.findOne({ SQL_ID, PLAN_HASH_VALUE });
+      return {
+        ok: true,
+        SQL_ID,
+        PLAN_HASH_VALUE,
+        ASSIGNEE: updated.ASSIGNEE,
+        COMPLETED: updated.COMPLETED,
+        COMMENT: updated.COMMENT,
+      };
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error };
