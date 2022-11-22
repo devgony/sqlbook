@@ -120,7 +120,7 @@ const SqlList: NextPage = () => {
     FindTopSqlsQueryVariables
   >(FIND_TOP_SQLS);
 
-  const onCompletedTunings = (data: CreateTuningsMutation) => {
+  const onCompletedCreateTunings = (data: CreateTuningsMutation) => {
     alert('added!');
     // const { type, elapsedTimeMin, bufferGetMin, take, module } = getValues();
     // const min =
@@ -139,7 +139,7 @@ const SqlList: NextPage = () => {
   const [createTunings, { data: dataTungins, error: errorTunings }] =
     useMutation<CreateTuningsMutation, CreateTuningsMutationVariables>(
       CREATE_TUNINGS,
-      { onCompleted: onCompletedTunings },
+      { onCompleted: onCompletedCreateTunings },
     );
   const columns = useMemo(
     () => headers.map(v => ({ Header: v, accessor: v })),
@@ -222,6 +222,7 @@ const SqlList: NextPage = () => {
       alert('please select rows first');
       return;
     }
+
     let tunings: TuningInput[] = topSqls.map(topSql => {
       let { __typename, ...tuning } = topSql;
       return tuning;
@@ -230,10 +231,9 @@ const SqlList: NextPage = () => {
   };
 
   return (
-    <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="ml-4 text-xl">TOP SQL List</h1>
-      {/* <label htmlFor="db-select">Choose a database:</label> */}
-      <select {...register('targetDb')} id="db-select">
+    <form className="mt-10 ml-2" onSubmit={handleSubmit(onSubmit)}>
+      <h1 className="text-xl">TOP SQL List</h1>
+      <select className="text-xl my-2" {...register('targetDb')} id="db-select">
         <option>Choose a database</option>
         {dataFindDbsName?.findDbs.dbs.map(db => (
           <option value={db.name}>{db.name}</option>
@@ -305,7 +305,7 @@ const SqlList: NextPage = () => {
             rowSelection="multiple" // Options - allows click selection of rows
             ref={gridRef}
             onSelectionChanged={onSelectionChanged}
-            // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+          // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
           />
         </div>
       </div>

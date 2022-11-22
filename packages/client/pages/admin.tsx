@@ -191,7 +191,7 @@ const AdminBody = () => {
       <div className="flex flex-col h-96 items-center text-sm">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full bg-red-100 grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center"
+          className="w-full py-4 bg-gray-200 grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center"
         >
           <span />
           <span>NAME</span>
@@ -217,7 +217,7 @@ const AdminBody = () => {
               <input name="password" value={db.password} readOnly={true} />
               <button
                 type="button"
-                className="btn"
+                className="px-2 py-0.5 text-white rounded text-xs bg-red-500"
                 onClick={() => runDeleteDb(db.name)}
               >
                 Delete
@@ -243,7 +243,8 @@ const AdminBody = () => {
               <button
                 onClick={() => { }}
                 // todo - handle lazy tailwind
-                className={`btn ${testRequired ? 'bg-gray-400' : ''}`}
+                className={`px-2 py-0.5 text-white rounded text-xs ${testRequired ? 'bg-gray-400' : 'bg-green-700'
+                  }`}
                 disabled={testRequired}
                 type="submit"
               >
