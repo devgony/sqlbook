@@ -12,9 +12,9 @@ const NavBar: NextComponentType = () => {
     isLoggedInVar(false);
   };
   return (
-    <div className="w-full flex h-10 justify-between items-center">
+    <div className="w-full flex h-16 justify-between items-center bg-sky-600 text-gray-200 font-bold">
       <Link href="/">
-        <a className="bg-yellow-300 ml-4 text-3xl">📖 SQL Book</a>
+        <a className="ml-4 text-3xl">📖 SQL Book</a>
       </Link>
       <nav className="w-1/2 flex justify-around">
         {/* <Link href="/sql-list">
@@ -29,7 +29,11 @@ const NavBar: NextComponentType = () => {
         <Link href="/admin">
           <a>ADMIN</a>
         </Link>
-        {isLoggedIn ? <button onClick={logout}>LOGOUT</button> : null}
+        {isLoggedIn ? (
+          <button className="font-bold" onClick={logout}>
+            LOGOUT
+          </button>
+        ) : null}
       </nav>
     </div>
   );

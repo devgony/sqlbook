@@ -2,5 +2,5 @@
 @tailwind components;
 @tailwind utilities;
 .btn {
-  @apply px-2 py-0.5 bg-sky-500 text-white rounded text-xs;
+  @apply px-2 py-0.5 bg-sky-600 text-white rounded text-xs;
 }

@@ -49,25 +49,27 @@ const Home: NextPage = () => {
     router.push('tuning-history/');
   };
   return (
-    <div className="w-full mt-40 py-10 flex justify-around bg-gray-200 text-center ">
+    <div className="w-full mt-40 py-10 flex justify-around bg-slate-200 text-center ">
       <div
-        className="bg-gray-300 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
+        className="bg-slate-200 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
         onClick={pushTop}
       >
-        <div className="bg-blue-300 rounded-md py-4">TOP SQL</div>
+        <div className="bg-sky-600 rounded-md py-4 text-gray-200">TOP SQL</div>
         {data?.countTopSqls.results?.map(r => (
-          <div className="py-8 my-2 bg-gray-400 rounded-md">
+          <div className="py-8 my-2 bg-gray-300 rounded-md">
             {r.name}: {r.count}
           </div>
         ))}
       </div>
       <div
-        className="bg-gray-300 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
+        className="bg-gray-200 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
         onClick={pushTune}
       >
-        <div className="bg-blue-300 rounded-md py-4">TUNING HISTORY</div>
+        <div className="bg-sky-600 rounded-md py-4 text-gray-200">
+          TUNING HISTORY
+        </div>
         {dataCountTunings?.countTunings.results?.map(r => (
-          <div className="py-8 my-2 bg-gray-400 rounded-md">
+          <div className="py-8 my-2 bg-gray-300 rounded-md">
             {r.name}: {r.count}
           </div>
         ))}

@@ -65,7 +65,7 @@ const Login: NextPage = () => {
           placeholder="password"
           {...register('password')}
         />
-        <button className="bg-sky-400 py-2">Login</button>
+        <button className="bg-sky-600 py-2">Login</button>
       </form>
     </section>
   );

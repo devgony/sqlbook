@@ -52,7 +52,6 @@ const FIND_DBS = gql`
         port
         schema
         username
-        password
       }
     }
   }
@@ -183,8 +182,6 @@ const AdminBody = () => {
     }
   };
 
-  const collect = () => { };
-
   return (
     <div>
       <h1 className="ml-4 mt-8 text-xl">Databases to gather SQL</h1>
@@ -214,7 +211,12 @@ const AdminBody = () => {
               <input value={db.port} readOnly={true} />
               <input value={db.schema} readOnly={true} />
               <input value={db.username} readOnly={true} />
-              <input name="password" value={db.password} readOnly={true} />
+              <input
+                name="password"
+                type="password"
+                value="******"
+                readOnly={true}
+              />
               <button
                 type="button"
                 className="px-2 py-0.5 text-white rounded text-xs bg-red-500"

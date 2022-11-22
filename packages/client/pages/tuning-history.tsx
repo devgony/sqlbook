@@ -236,11 +236,6 @@ const TuningHistory: NextPage = () => {
           COMPLETED,
           COMMENT,
         },
-        // fields: {
-        //   [field](_) {
-        //     return newValue;
-        //   },
-        // },
       });
     }
   };
