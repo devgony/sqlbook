@@ -127,6 +127,7 @@ import { SqlStat } from './sqlStat.entity';
                   ) C ON A.MIN_SNAP_ID = C.SNAP_ID
               ) C
               WHERE A.SQL_ID = B.SQL_ID
+              AND A.DBID = B.DBID
               -- AND B.DBID = (SELECT DBID FROM V$DATABASE WHERE ROWNUM <= 1)
               AND A.SQL_ID = C.SQL_ID
               -- AND sql_text NOT LIKE 'begin%'
@@ -154,79 +155,79 @@ export class TopSql {
   @Field(() => String)
   @ViewColumn()
   SQL_ID: string;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   PLAN_HASH_VALUE: number;
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @ViewColumn()
   PARSING_SCHEMA_NAME: string;
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @ViewColumn()
   MODULE: string;
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @ViewColumn()
   JOB_NAME: string;
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @ViewColumn()
   SQL_TEXT: string;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   EXECUTIONS: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   BUFFER_GETS_TOTAL: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   ROWS_PROCESSED: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   TOTAL_ELAPSED_MIN: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_ROWS: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_ELAPSED_SEC: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_BUFFER_GETS: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_DISK_READS: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   TOTAL_CPU_MIN: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   TOTAL_IOWAIT_MIN: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   TOTAL_CLWAIT_MIN: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   TOTAL_APWAIT_MIN: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   TOTAL_CCWAIT_MIN: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_CPU_SEC: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_IOWAIT_SEC: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_CLWAIT_SEC: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_APWAIT_SEC: number;
-  @Field(() => Number)
+  @Field(() => Number, { nullable: true })
   @ViewColumn()
   AVG_CCWAIT_SEC: number;
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @ViewColumn()
   LAST_EXEC_TIME: Date;
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   @ViewColumn()
   FIRST_EXEC_TIME: Date;
 }
