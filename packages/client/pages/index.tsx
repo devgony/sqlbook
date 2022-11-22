@@ -5,12 +5,42 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import client from '../apollo-client';
 import {
+  CountTopSqlsQuery,
+  CountTuningsQuery,
   LoginInput,
   LoginMutation,
   LoginMutationVariables,
 } from '../generated/graphql';
 
+const COUNT_TOP_SQLS = gql`
+  query countTopSqls {
+    countTopSqls {
+      ok
+      error
+      results {
+        name
+        count
+      }
+    }
+  }
+`;
+
+const COUNT_TUNINGS = gql`
+  query countTunings {
+    countTunings {
+      ok
+      error
+      results {
+        name
+        count
+      }
+    }
+  }
+`;
+
 const Home: NextPage = () => {
+  const { data, error } = useQuery<CountTopSqlsQuery>(COUNT_TOP_SQLS);
+  const { data: dataCountTunings } = useQuery<CountTuningsQuery>(COUNT_TUNINGS);
   const router = useRouter();
   const pushTop = () => {
     router.push('top-sql/');
@@ -19,32 +49,28 @@ const Home: NextPage = () => {
     router.push('tuning-history/');
   };
   return (
-    <div className="w-full h-1/3 mt-40 flex justify-around bg-gray-200 text-center ">
+    <div className="w-full mt-40 py-10 flex justify-around bg-gray-200 text-center ">
       <div
         className="bg-gray-300 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
         onClick={pushTop}
       >
-        <div className="bg-blue-300 rounded-md">TOP SQL</div>
-        <ul>
-          <li>list1</li>
-          <li>list2</li>
-          <li>list3</li>
-          <li>list4</li>
-          <li>list5</li>
-        </ul>
+        <div className="bg-blue-300 rounded-md py-4">TOP SQL</div>
+        {data?.countTopSqls.results?.map(r => (
+          <div className="py-8 my-2 bg-gray-400 rounded-md">
+            {r.name}: {r.count}
+          </div>
+        ))}
       </div>
       <div
         className="bg-gray-300 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
         onClick={pushTune}
       >
-        <div className="bg-blue-300 rounded-md">TUNING HISTORY</div>
-        <ul>
-          <li>list1</li>
-          <li>list2</li>
-          <li>list3</li>
-          <li>list4</li>
-          <li>list5</li>
-        </ul>
+        <div className="bg-blue-300 rounded-md py-4">TUNING HISTORY</div>
+        {dataCountTunings?.countTunings.results?.map(r => (
+          <div className="py-8 my-2 bg-gray-400 rounded-md">
+            {r.name}: {r.count}
+          </div>
+        ))}
       </div>
     </div>
   );
