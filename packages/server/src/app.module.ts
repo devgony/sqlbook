@@ -52,20 +52,29 @@ import { Tuning } from './dbs/entities/tuning.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
       logging: true,
-      entities: [User, Db, SqlStat, SqlText, SqlStatText, Snapshot, TopSql, Tuning],
+      entities: [
+        User,
+        Db,
+        SqlStat,
+        SqlText,
+        SqlStatText,
+        Snapshot,
+        TopSql,
+        Tuning,
+      ],
     }),
-    TypeOrmModule.forRoot({
-      name: 'connOracle',
-      type: 'oracle',
-      host: process.env.ORA_HOST,
-      port: +process.env.ORA_PORT,
-      username: process.env.ORA_USERNAME,
-      password: process.env.ORA_PASSWORD,
-      serviceName: process.env.ORA_NAME,
-      synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
-      logging: true,
-      entities: [],
-    }),
+    // TypeOrmModule.forRoot({
+    //   name: 'connOracle',
+    //   type: 'oracle',
+    //   host: process.env.ORA_HOST,
+    //   port: +process.env.ORA_PORT,
+    //   username: process.env.ORA_USERNAME,
+    //   password: process.env.ORA_PASSWORD,
+    //   serviceName: process.env.ORA_NAME,
+    //   synchronize: process.env.NODE_ENV !== 'production', // migrate current state to model
+    //   logging: true,
+    //   entities: [],
+    // }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
     }),
@@ -75,4 +84,4 @@ import { Tuning } from './dbs/entities/tuning.entity';
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

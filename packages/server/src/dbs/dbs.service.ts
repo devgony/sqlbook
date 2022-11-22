@@ -57,8 +57,7 @@ export class DbsService {
     @InjectRepository(TopSql)
     private readonly topSqls: Repository<TopSql>,
     @InjectRepository(Tuning)
-    private readonly tunings: Repository<Tuning>,
-    @InjectConnection('connOracle') private readonly ora: Connection,
+    private readonly tunings: Repository<Tuning>, // @InjectConnection('connOracle') private readonly ora: Connection,
   ) {}
   async createDb({
     name,
@@ -190,45 +189,45 @@ export class DbsService {
     }
   }
 
-  async gatherSqlStat(): Promise<GatherSqlStatOutput> {
-    try {
-      const sqlHist: SqlStat[] = await this.ora.query(querySqlStat);
-      await this.sqlHists.insert(sqlHist);
-      // await this.sqlHists.save(this.sqlHists.create(sqlHist));
-      return { ok: true };
-    } catch (error) {
-      errLog(__filename, error);
-      return { ok: false, error };
-    }
-  }
+  // async gatherSqlStat(): Promise<GatherSqlStatOutput> {
+  //   try {
+  //     const sqlHist: SqlStat[] = await this.ora.query(querySqlStat);
+  //     await this.sqlHists.insert(sqlHist);
+  //     // await this.sqlHists.save(this.sqlHists.create(sqlHist));
+  //     return { ok: true };
+  //   } catch (error) {
+  //     errLog(__filename, error);
+  //     return { ok: false, error };
+  //   }
+  // }
 
-  async gatherSqlText(): Promise<GatherSqlTextOutput> {
-    try {
-      const sqlTexts: SqlText[] = await this.ora.query(querySqlText);
-      await this.sqlTexts.upsert(sqlTexts, {
-        conflictPaths: ['DBID', 'SQL_ID'],
-      }); // how to avoid update? -> QBuilder + orIgnore
-      // await this.sqlTexts.insert(sqlTexts); // dup error
-      // await this.sqlTexts.save(this.sqlTexts.create(sqlText)); // does not work with bulk
-      return { ok: true };
-    } catch (error) {
-      errLog(__filename, error);
-      return { ok: false, error };
-    }
-  }
+  // async gatherSqlText(): Promise<GatherSqlTextOutput> {
+  //   try {
+  //     const sqlTexts: SqlText[] = await this.ora.query(querySqlText);
+  //     await this.sqlTexts.upsert(sqlTexts, {
+  //       conflictPaths: ['DBID', 'SQL_ID'],
+  //     }); // how to avoid update? -> QBuilder + orIgnore
+  //     // await this.sqlTexts.insert(sqlTexts); // dup error
+  //     // await this.sqlTexts.save(this.sqlTexts.create(sqlText)); // does not work with bulk
+  //     return { ok: true };
+  //   } catch (error) {
+  //     errLog(__filename, error);
+  //     return { ok: false, error };
+  //   }
+  // }
 
-  async gatherSnapshot(): Promise<GatherSnapshotOutput> {
-    try {
-      const snapshots: Snapshot[] = await this.ora.query(querySnapshot);
-      await this.snapshots.upsert(snapshots, {
-        conflictPaths: ['DBID', 'SNAP_ID'],
-      });
-      return { ok: true };
-    } catch (error) {
-      errLog(__filename, error);
-      return { ok: false, error };
-    }
-  }
+  // async gatherSnapshot(): Promise<GatherSnapshotOutput> {
+  //   try {
+  //     const snapshots: Snapshot[] = await this.ora.query(querySnapshot);
+  //     await this.snapshots.upsert(snapshots, {
+  //       conflictPaths: ['DBID', 'SNAP_ID'],
+  //     });
+  //     return { ok: true };
+  //   } catch (error) {
+  //     errLog(__filename, error);
+  //     return { ok: false, error };
+  //   }
+  // }
 
   async gather(input: GatherInput): Promise<GatherOutput> {
     try {

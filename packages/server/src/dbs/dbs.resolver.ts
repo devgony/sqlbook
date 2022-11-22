@@ -24,7 +24,7 @@ import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 
 @Resolver()
 export class DbsResolver {
-  constructor(private readonly dbsService: DbsService) { }
+  constructor(private readonly dbsService: DbsService) {}
 
   @Mutation(() => CreateDbOutput)
   async createDb(
@@ -50,20 +50,20 @@ export class DbsResolver {
     return this.dbsService.testDb(testdbInput);
   }
 
-  @Query(() => GatherSqlStatOutput)
-  async gatherSqlStat(): Promise<GatherSqlStatOutput> {
-    return this.dbsService.gatherSqlStat();
-  }
+  // @Query(() => GatherSqlStatOutput)
+  // async gatherSqlStat(): Promise<GatherSqlStatOutput> {
+  //   return this.dbsService.gatherSqlStat();
+  // }
 
-  @Query(() => GatherSqlTextOutput)
-  async gatherSqlText(): Promise<GatherSqlTextOutput> {
-    return this.dbsService.gatherSqlText();
-  }
+  // @Query(() => GatherSqlTextOutput)
+  // async gatherSqlText(): Promise<GatherSqlTextOutput> {
+  //   return this.dbsService.gatherSqlText();
+  // }
 
-  @Query(() => GatherSnapshotOutput)
-  async gatherSnapshot(): Promise<GatherSnapshotOutput> {
-    return this.dbsService.gatherSnapshot();
-  }
+  // @Query(() => GatherSnapshotOutput)
+  // async gatherSnapshot(): Promise<GatherSnapshotOutput> {
+  //   return this.dbsService.gatherSnapshot();
+  // }
 
   @Query(() => GatherOutput)
   async gather(@Args('input') gatherInput: GatherInput): Promise<GatherOutput> {
