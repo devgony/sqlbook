@@ -111,7 +111,7 @@ const SqlList: NextPage = () => {
       bufferGetMin: 50000,
       take: 30,
       module: '%',
-      targetDb: dataFindDbsName?.findDbs.dbs[0].name,
+      targetDb: dataFindDbsName?.findDbs.dbs[0].name || '',
     },
   });
 
@@ -242,8 +242,8 @@ const SqlList: NextPage = () => {
       <div className="flex">
         <div className="flex flex-col">
           <div>
-            <input type="radio" value="AVG_ELAPSED_SEC" {...register('type')} />
-            <label htmlFor="AVG_ELAPSED_SEC"> AVG_ELAPSED_SEC</label>
+            <input type="radio" value="ELAPSED_TIME" {...register('type')} />
+            <label htmlFor="ELAPSED_TIME"> AVG_ELAPSED_SEC</label>
             <label htmlFor="elapsedTimeMin">{' > '}</label>
             <input
               type="number"
@@ -305,7 +305,7 @@ const SqlList: NextPage = () => {
             rowSelection="multiple" // Options - allows click selection of rows
             ref={gridRef}
             onSelectionChanged={onSelectionChanged}
-          // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+            // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
           />
         </div>
       </div>
