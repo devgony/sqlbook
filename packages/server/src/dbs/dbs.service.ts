@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
+import { CountResult } from 'src/common/dtos/countResult.dto';
 import { errLog } from 'src/common/hooks/errLog';
 import { getErrorMessage } from 'src/common/hooks/getErrorMessage';
 import { querySnapshot, querySqlStat, querySqlText } from 'src/common/queries';
 import {
   Connection,
   createConnection,
+  createQueryBuilder,
   Like,
   MoreThan,
   Repository,
 } from 'typeorm';
+import { CountTopSqlsOutput } from './dtos/count-topsqls.dto';
+import { CountTuningsOutput } from './dtos/count-tunings.dto';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import {
   CreateTuningsInput,
@@ -55,7 +59,7 @@ export class DbsService {
     @InjectRepository(Tuning)
     private readonly tunings: Repository<Tuning>,
     @InjectConnection('connOracle') private readonly ora: Connection,
-  ) {}
+  ) { }
   async createDb({
     name,
     host,
@@ -412,6 +416,35 @@ export class DbsService {
         COMMENT,
       });
       return { ok: true, SQL_ID, PLAN_HASH_VALUE };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error };
+    }
+  }
+
+  async countTopSqls(): Promise<CountTopSqlsOutput> {
+    try {
+      const results: CountResult[] = await createQueryBuilder(TopSql)
+        .innerJoin(Db, 'd', 'TopSql.DBID = d.dbid')
+        .select('d.name, count(*) AS count')
+        // .where('d.name in (:...dbNames)', { dbNames })
+        .groupBy('d.name')
+        .getRawMany();
+      return { ok: true, results };
+    } catch (error) {
+      errLog(__filename, error);
+      return { ok: false, error };
+    }
+  }
+
+  async countTunings(): Promise<CountTuningsOutput> {
+    try {
+      const results: CountResult[] = await createQueryBuilder(Tuning)
+        .innerJoin(Db, 'd', 'Tuning.DBID = d.dbid')
+        .select('d.name, count(*) AS count')
+        .groupBy('d.name')
+        .getRawMany();
+      return { ok: true, results };
     } catch (error) {
       errLog(__filename, error);
       return { ok: false, error };

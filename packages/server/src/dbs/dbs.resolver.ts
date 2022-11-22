@@ -1,5 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { DbsService } from './dbs.service';
+import { CountTopSqlsOutput } from './dtos/count-topsqls.dto';
+import { CountTuningsOutput } from './dtos/count-tunings.dto';
 import { CreateDbInput, CreateDbOutput } from './dtos/create-db.dto';
 import {
   CreateTuningsInput,
@@ -22,7 +24,7 @@ import { TestDbInput, TestDbOuput } from './dtos/test-db.dto';
 
 @Resolver()
 export class DbsResolver {
-  constructor(private readonly dbsService: DbsService) {}
+  constructor(private readonly dbsService: DbsService) { }
 
   @Mutation(() => CreateDbOutput)
   async createDb(
@@ -101,5 +103,15 @@ export class DbsResolver {
     @Args('input') editTuningInput: EditTuningInput,
   ): Promise<EditTuningOutput> {
     return this.dbsService.editTuning(editTuningInput);
+  }
+
+  @Query(() => CountTopSqlsOutput)
+  countTopSqls(): Promise<CountTopSqlsOutput> {
+    return this.dbsService.countTopSqls();
+  }
+
+  @Query(() => CountTuningsOutput)
+  countTunings(): Promise<CountTuningsOutput> {
+    return this.dbsService.countTunings();
   }
 }
