@@ -197,6 +197,7 @@ const EDIT_TUNING = gql`
     editTuning(input: $input) {
       ok
       error
+      DBID
       SQL_ID
       PLAN_HASH_VALUE
       ASSIGNEE
@@ -218,12 +219,12 @@ const TuningHistory: NextPage = () => {
       return;
     }
     console.log('here');
-    const { SQL_ID, PLAN_HASH_VALUE, ASSIGNEE, COMPLETED, COMMENT } =
+    const { DBID, SQL_ID, PLAN_HASH_VALUE, ASSIGNEE, COMPLETED, COMMENT } =
       result.data.editTuning;
     console.log(result.data.editTuning);
     if (SQL_ID && PLAN_HASH_VALUE) {
       cache.writeFragment({
-        id: `Tuning:${SQL_ID}||${PLAN_HASH_VALUE}`,
+        id: `Tuning:${DBID}||${SQL_ID}||${PLAN_HASH_VALUE}`,
         fragment: gql`
           fragment MyTuning on Tuning {
             ASSIGNEE
@@ -296,12 +297,14 @@ const TuningHistory: NextPage = () => {
       newValue,
       rowIndex,
       colDef: { field },
-      data: { SQL_ID, PLAN_HASH_VALUE },
+      data: { DBID, SQL_ID, PLAN_HASH_VALUE },
     } = event;
     if (field) {
       let key = field as 'ASSIGNEE' | 'COMPLETED' | 'COMMENT';
       editTuning({
-        variables: { input: { SQL_ID, PLAN_HASH_VALUE, [key]: newValue } },
+        variables: {
+          input: { DBID, SQL_ID, PLAN_HASH_VALUE, [key]: newValue },
+        },
       });
     }
   };
