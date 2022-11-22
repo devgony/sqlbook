@@ -13,8 +13,10 @@
 - [x] make tunings::{ASSIGNEE, COMPLETED, COMMENT} editable, modify cache
 - [ ] should get whether already in tuning-history or not
 - [ ] mark unable to select
+- [x] enhance nav
 
 ### server
 
 - [x] alter Tuning.COMPLETED to varchar(1) {Y,N}
 - [x] alter Tuning add primary key {SQL_ID, PLAN_HASH_VALUE}
+- [x] add DBID to Tuning's key
