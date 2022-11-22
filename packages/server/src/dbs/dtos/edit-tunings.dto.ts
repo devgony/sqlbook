@@ -10,7 +10,7 @@ import { Tuning } from '../entities/tuning.entity';
 
 @InputType()
 export class EditTuningInput extends IntersectionType(
-  PickType(Tuning, ['SQL_ID', 'PLAN_HASH_VALUE']),
+  PickType(Tuning, ['DBID', 'SQL_ID', 'PLAN_HASH_VALUE']),
   PartialType(PickType(Tuning, ['ASSIGNEE', 'COMPLETED', 'COMMENT'])),
 ) {}
 
@@ -19,6 +19,7 @@ export class EditTuningOutput extends IntersectionType(
   ResultOutput,
   PartialType(
     PickType(Tuning, [
+      'DBID',
       'SQL_ID',
       'PLAN_HASH_VALUE',
       'ASSIGNEE',

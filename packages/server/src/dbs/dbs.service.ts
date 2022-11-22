@@ -396,6 +396,7 @@ export class DbsService {
   }
 
   async editTuning({
+    DBID,
     SQL_ID,
     PLAN_HASH_VALUE,
     ASSIGNEE,
@@ -404,7 +405,7 @@ export class DbsService {
   }: EditTuningInput): Promise<EditTuningOutput> {
     try {
       const tuning = await this.tunings.findOne({
-        where: { SQL_ID, PLAN_HASH_VALUE },
+        where: { DBID, SQL_ID, PLAN_HASH_VALUE },
       });
       if (!tuning) {
         return { ok: false, error: 'cannot find tuning' };
@@ -415,9 +416,14 @@ export class DbsService {
         COMPLETED,
         COMMENT,
       });
-      const updated = await this.tunings.findOne({ SQL_ID, PLAN_HASH_VALUE });
+      const updated = await this.tunings.findOne({
+        DBID,
+        SQL_ID,
+        PLAN_HASH_VALUE,
+      });
       return {
         ok: true,
+        DBID,
         SQL_ID,
         PLAN_HASH_VALUE,
         ASSIGNEE: updated.ASSIGNEE,
