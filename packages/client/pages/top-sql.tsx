@@ -20,6 +20,8 @@ import {
   TuningInput,
 } from '../generated/graphql';
 import { FIND_DBS_NAME } from '../utils/gqls';
+import { Helmet } from 'react-helmet';
+import { TITLE } from '../utils/const';
 
 const headers = [
   'DBID',
@@ -234,6 +236,9 @@ const SqlList: NextPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>{`TopSQL | ${TITLE}`}</title>
+      </Helmet>
       <form className="mt-10 ml-6" onSubmit={handleSubmit(onSubmit)}>
         <h1 className="text-2xl text-center font-bold">TOP SQL List</h1>
         <select

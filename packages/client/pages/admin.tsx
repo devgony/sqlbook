@@ -13,6 +13,7 @@ import {
   NextPage,
 } from 'next';
 import { Fragment, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { isLoggedInVar } from '../apollo-client';
 import Login from '../components/Login';
@@ -26,6 +27,7 @@ import {
   DeleteDbMutationVariables,
   GatherQuery,
 } from '../generated/graphql';
+import { TITLE } from '../utils/const';
 
 // export const getServerSideProps = () => {
 //   const data = useReactiveVar(isLoggedInVar);
@@ -184,6 +186,9 @@ const AdminBody = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>{`Admin | ${TITLE}`}</title>
+      </Helmet>
       <h1 className="ml-4 mt-6 mb-4 text-xl text-center font-bold">
         Databases to gather SQL
       </h1>

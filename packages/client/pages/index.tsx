@@ -11,6 +11,8 @@ import {
   LoginMutation,
   LoginMutationVariables,
 } from '../generated/graphql';
+import { Helmet } from 'react-helmet';
+import { TITLE } from '../utils/const';
 
 const COUNT_TOP_SQLS = gql`
   query countTopSqls {
@@ -50,6 +52,9 @@ const Home: NextPage = () => {
   };
   return (
     <div className="w-full mt-40 py-10 flex justify-center text-center ">
+      <Helmet>
+        <title>{`Home | ${TITLE}`}</title>
+      </Helmet>
       <div className="w-1/3 rounded-md cursor-pointer mr-12" onClick={pushTop}>
         <div className="bg-teal-700 hover:bg-teal-800 rounded-md py-4 text-gray-100 font-bold">
           TOP SQL

@@ -21,6 +21,8 @@ import {
 } from '../generated/graphql';
 import { useForm } from 'react-hook-form';
 import { FIND_DBS_NAME } from '../utils/gqls';
+import { Helmet } from 'react-helmet';
+import { TITLE } from '../utils/const';
 
 const headers = [
   'CREATED_AT',
@@ -319,6 +321,9 @@ const TuningHistory: NextPage = () => {
   };
   return (
     <div className="ml-2">
+      <Helmet>
+        <title>{`TuningHistory | ${TITLE}`}</title>
+      </Helmet>
       <h1 className="mt-6 text-2xl text-center font-bold">Tuning History</h1>
       <form
         className="mt-2 ag-theme-alpine"
