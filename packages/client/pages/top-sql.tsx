@@ -237,7 +237,7 @@ const SqlList: NextPage = () => {
       <form className="mt-10 ml-6" onSubmit={handleSubmit(onSubmit)}>
         <h1 className="text-2xl text-center font-bold">TOP SQL List</h1>
         <select
-          className="text-xl my-2"
+          className="text-xl my-2 bg-gray-100"
           {...register('targetDb')}
           id="db-select"
         >

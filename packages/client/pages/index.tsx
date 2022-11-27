@@ -51,7 +51,7 @@ const Home: NextPage = () => {
   return (
     <div className="w-full mt-40 py-10 flex justify-center text-center ">
       <div className="w-1/3 rounded-md cursor-pointer mr-12" onClick={pushTop}>
-        <div className="bg-teal-700 hover:bg-teal-800 rounded-md py-4 text-gray-200 font-bold">
+        <div className="bg-teal-700 hover:bg-teal-800 rounded-md py-4 text-gray-100 font-bold">
           TOP SQL
         </div>
         {data?.countTopSqls.results?.map(r => (
@@ -61,7 +61,7 @@ const Home: NextPage = () => {
         ))}
       </div>
       <div className="w-1/3 rounded-md cursor-pointer" onClick={pushTune}>
-        <div className="bg-teal-700 hover:bg-teal-800 rounded-md py-4 text-gray-200 font-bold">
+        <div className="bg-teal-700 hover:bg-teal-800 rounded-md py-4 text-gray-100 font-bold">
           TUNING HISTORY
         </div>
         {dataCountTunings?.countTunings.results?.map(r => (

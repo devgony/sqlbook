@@ -325,7 +325,7 @@ const TuningHistory: NextPage = () => {
         style={{ height: 600, width: '100%' }}
       >
         <select
-          className="text-xl my-2"
+          className="text-xl my-2 bg-gray-100"
           {...register('targetDb')}
           onChange={e => {
             register('targetDb').onChange(e);

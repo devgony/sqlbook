@@ -2,5 +2,5 @@
 @tailwind components;
 @tailwind utilities;
 .btn {
-  @apply px-2 py-3 bg-teal-700 text-white rounded text-xs hover:bg-teal-800;
+  @apply px-2 py-3 bg-teal-700 text-gray-100 rounded text-xs hover:bg-teal-800;
 }

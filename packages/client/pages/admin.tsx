@@ -184,9 +184,11 @@ const AdminBody = () => {
 
   return (
     <div>
-      <h1 className="ml-4 mt-8 text-xl">Databases to gather SQL</h1>
+      <h1 className="ml-4 mt-6 mb-4 text-xl text-center font-bold">
+        Databases to gather SQL
+      </h1>
       <div className="flex flex-col h-96 items-center text-sm">
-        <div className="w-full py-2 bg-teal-900 text-white grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center">
+        <div className="w-full py-2 bg-teal-900 text-gray-100 grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center">
           <span />
           <span>NAME</span>
           <span>HOST</span>
@@ -247,7 +249,7 @@ const AdminBody = () => {
               <button
                 onClick={() => {}}
                 // todo - handle lazy tailwind
-                className={`px-2 py-2 text-white rounded text-xs ${
+                className={`px-2 py-2 text-gray-100 rounded text-xs ${
                   testRequired
                     ? 'bg-gray-400 hover:bg-gray-500'
                     : 'bg-teal-700 hover:bg-teal-800'

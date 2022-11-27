@@ -3,6 +3,7 @@ import { NextComponentType } from 'next';
 import Link from 'next/link';
 import { authTokenVar, isLoggedInVar } from '../apollo-client';
 import { LOCALSTORAGE_TOKEN } from '../utils/const';
+import { GiBookmarklet } from 'react-icons/gi';
 
 const NavBar: NextComponentType = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
@@ -12,9 +13,11 @@ const NavBar: NextComponentType = () => {
     isLoggedInVar(false);
   };
   return (
-    <div className="w-full flex h-16 justify-between items-center bg-teal-700 text-gray-200 font-bold">
+    <div className="w-full flex h-16 justify-between items-center bg-teal-700 text-gray-100 font-bold">
       <Link href="/">
-        <a className="ml-4 text-3xl">📖 SQL Book</a>
+        <a className="ml-4 text-3xl flex">
+          <GiBookmarklet className="mt-1 mr-2" /> SQL Book
+        </a>
       </Link>
       <nav className="w-1/2 flex justify-around">
         {/* <Link href="/sql-list">
