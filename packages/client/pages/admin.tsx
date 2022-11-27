@@ -186,10 +186,7 @@ const AdminBody = () => {
     <div>
       <h1 className="ml-4 mt-8 text-xl">Databases to gather SQL</h1>
       <div className="flex flex-col h-96 items-center text-sm">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full py-4 bg-gray-200 grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center"
-        >
+        <div className="w-full py-2 bg-teal-900 text-white grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center">
           <span />
           <span>NAME</span>
           <span>HOST</span>
@@ -199,6 +196,11 @@ const AdminBody = () => {
           <span>PASSWORD</span>
           <span></span>
           <span></span>
+        </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full bg-gray-100 grid text-center gap-0.5 grid-cols-[20px,13%,15%,13%,13%,13%,13%,60px,60px] justify-center shadow-xl mb-6"
+        >
           {data?.findDbs.dbs.map((db, i) => (
             <Fragment key={i}>
               <input
@@ -219,7 +221,7 @@ const AdminBody = () => {
               />
               <button
                 type="button"
-                className="px-2 py-0.5 text-white rounded text-xs bg-red-500"
+                className="btn"
                 onClick={() => runDeleteDb(db.name)}
               >
                 Delete
@@ -243,10 +245,13 @@ const AdminBody = () => {
                 Test
               </button>
               <button
-                onClick={() => { }}
+                onClick={() => {}}
                 // todo - handle lazy tailwind
-                className={`px-2 py-0.5 text-white rounded text-xs ${testRequired ? 'bg-gray-400' : 'bg-green-700'
-                  }`}
+                className={`px-2 py-2 text-white rounded text-xs ${
+                  testRequired
+                    ? 'bg-gray-400 hover:bg-gray-500'
+                    : 'bg-teal-700 hover:bg-teal-800'
+                }`}
                 disabled={testRequired}
                 type="submit"
               >

@@ -49,27 +49,23 @@ const Home: NextPage = () => {
     router.push('tuning-history/');
   };
   return (
-    <div className="w-full mt-40 py-10 flex justify-around bg-slate-200 text-center ">
-      <div
-        className="bg-slate-200 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
-        onClick={pushTop}
-      >
-        <div className="bg-sky-600 rounded-md py-4 text-gray-200">TOP SQL</div>
+    <div className="w-full mt-40 py-10 flex justify-center text-center ">
+      <div className="w-1/3 rounded-md cursor-pointer mr-12" onClick={pushTop}>
+        <div className="bg-teal-700 hover:bg-teal-800 rounded-md py-4 text-gray-200 font-bold">
+          TOP SQL
+        </div>
         {data?.countTopSqls.results?.map(r => (
-          <div className="py-8 my-2 bg-gray-300 rounded-md">
+          <div className="py-8 my-2 bg-slate-200 rounded-md hover:bg-slate-300">
             {r.name}: {r.count}
           </div>
         ))}
       </div>
-      <div
-        className="bg-gray-200 w-1/3 rounded-md cursor-pointer shadow-xl hover:drop-shadow-2xl"
-        onClick={pushTune}
-      >
-        <div className="bg-sky-600 rounded-md py-4 text-gray-200">
+      <div className="w-1/3 rounded-md cursor-pointer" onClick={pushTune}>
+        <div className="bg-teal-700 hover:bg-teal-800 rounded-md py-4 text-gray-200 font-bold">
           TUNING HISTORY
         </div>
         {dataCountTunings?.countTunings.results?.map(r => (
-          <div className="py-8 my-2 bg-gray-300 rounded-md">
+          <div className="py-8 my-2 bg-slate-200 rounded-md hover:bg-slate-300">
             {r.name}: {r.count}
           </div>
         ))}

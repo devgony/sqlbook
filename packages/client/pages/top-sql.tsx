@@ -111,7 +111,7 @@ const SqlList: NextPage = () => {
       bufferGetMin: 50000,
       take: 30,
       module: '%',
-      targetDb: dataFindDbsName?.findDbs.dbs[0].name || '',
+      targetDb: dataFindDbsName?.findDbs.dbs[0]?.name || '',
     },
   });
 
@@ -119,6 +119,8 @@ const SqlList: NextPage = () => {
     FindTopSqlsQuery,
     FindTopSqlsQueryVariables
   >(FIND_TOP_SQLS);
+
+  console.log(data);
 
   const onCompletedCreateTunings = (data: CreateTuningsMutation) => {
     alert('added!');
@@ -231,61 +233,86 @@ const SqlList: NextPage = () => {
   };
 
   return (
-    <form className="mt-10 ml-2" onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="text-xl">TOP SQL List</h1>
-      <select className="text-xl my-2" {...register('targetDb')} id="db-select">
-        <option>Choose a database</option>
-        {dataFindDbsName?.findDbs.dbs.map(db => (
-          <option value={db.name}>{db.name}</option>
-        ))}
-      </select>
-      <div className="flex">
-        <div className="flex flex-col">
-          <div>
-            <input type="radio" value="ELAPSED_TIME" {...register('type')} />
-            <label htmlFor="ELAPSED_TIME"> AVG_ELAPSED_SEC</label>
-            <label htmlFor="elapsedTimeMin">{' > '}</label>
-            <input
-              type="number"
-              placeholder="min"
-              disabled={watch().type == TopSqlType.ElapsedTime ? false : true}
-              {...register('elapsedTimeMin')}
-            />
+    <div>
+      <form className="mt-10 ml-6" onSubmit={handleSubmit(onSubmit)}>
+        <h1 className="text-2xl text-center font-bold">TOP SQL List</h1>
+        <select
+          className="text-xl my-2"
+          {...register('targetDb')}
+          id="db-select"
+        >
+          <option value="Choose a database">Choose a database</option>
+          {dataFindDbsName?.findDbs.dbs.map(db => (
+            <option value={db.name}>{db.name}</option>
+          ))}
+        </select>
+        <div className="flex">
+          <div className="flex flex-col">
+            <div>
+              <input type="radio" value="ELAPSED_TIME" {...register('type')} />
+              <label htmlFor="ELAPSED_TIME"> AVG_ELAPSED_SEC</label>
+              <label htmlFor="elapsedTimeMin">{' > '}</label>
+              <input
+                className={`${
+                  watch().type == TopSqlType.ElapsedTime
+                    ? 'bg-gray-100'
+                    : 'bg-gray-300'
+                } w-12`}
+                type="number"
+                placeholder="min"
+                disabled={watch().type == TopSqlType.ElapsedTime ? false : true}
+                {...register('elapsedTimeMin')}
+              />
+            </div>
+            <div>
+              <input type="radio" value="BUFFER_GET" {...register('type')} />
+              <label htmlFor="BUFFER_GET"> BUFFER_GET</label>
+              <label htmlFor="bufferGetMin">{' > '}</label>
+              <input
+                className={`${
+                  watch().type == TopSqlType.BufferGet
+                    ? 'bg-gray-100'
+                    : 'bg-gray-300'
+                } w-24`}
+                type="number"
+                placeholder="min"
+                disabled={watch().type == TopSqlType.BufferGet ? false : true}
+                {...register('bufferGetMin')}
+              />
+            </div>
           </div>
-          <div>
-            <input type="radio" value="BUFFER_GET" {...register('type')} />
-            <label htmlFor="BUFFER_GET"> BUFFER_GET</label>
-            <label htmlFor="bufferGetMin">{' > '}</label>
-            <input
-              type="number"
-              placeholder="min"
-              disabled={watch().type == TopSqlType.BufferGet ? false : true}
-              {...register('bufferGetMin')}
-            />
+          <div className="flex flex-col ml-4 w-64">
+            <div>
+              <label htmlFor="top" className="mr-2">
+                Module
+              </label>
+              <input
+                className="bg-gray-100"
+                placeholder="module"
+                {...register('module')}
+              />
+            </div>
+            <div>
+              <label htmlFor="top" className="mr-2">
+                TOP
+              </label>
+              <input
+                className="bg-gray-100 w-12"
+                type="number"
+                placeholder="top"
+                {...register('take')}
+              />
+            </div>
           </div>
+          <button type="submit" className="btn">
+            Search
+          </button>
+          <button className="btn ml-1" onClick={addTuning}>
+            Add to Tuning
+          </button>
         </div>
-        <div className="flex flex-col">
-          <div>
-            <label htmlFor="top" className="mr-2">
-              Module
-            </label>
-            <input placeholder="module" {...register('module')} />
-          </div>
-          <div>
-            <label htmlFor="top" className="mr-2">
-              TOP
-            </label>
-            <input type="number" placeholder="top" {...register('take')} />
-          </div>
-        </div>
-        <button type="submit" className="btn">
-          Search
-        </button>
-        <button className="btn ml-1" onClick={addTuning}>
-          Add to Tuning
-        </button>
-      </div>
-      <div>
+      </form>
+      <div className="ml-2">
         {/* {data?.findTopSqls.topSqls ? ( */}
         {/*   <Table columns={columns} data={data.findTopSqls.topSqls} /> */}
         {/* ) : ( */}
@@ -305,11 +332,11 @@ const SqlList: NextPage = () => {
             rowSelection="multiple" // Options - allows click selection of rows
             ref={gridRef}
             onSelectionChanged={onSelectionChanged}
-          // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
+            // onCellClicked={cellClickedListener} // Optional - registering for Grid Event
           />
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 export default SqlList;

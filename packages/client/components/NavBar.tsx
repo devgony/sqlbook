@@ -12,7 +12,7 @@ const NavBar: NextComponentType = () => {
     isLoggedInVar(false);
   };
   return (
-    <div className="w-full flex h-16 justify-between items-center bg-sky-600 text-gray-200 font-bold">
+    <div className="w-full flex h-16 justify-between items-center bg-teal-700 text-gray-200 font-bold">
       <Link href="/">
         <a className="ml-4 text-3xl">📖 SQL Book</a>
       </Link>

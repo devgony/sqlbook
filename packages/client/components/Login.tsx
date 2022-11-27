@@ -51,21 +51,21 @@ const Login: NextPage = () => {
   return (
     <section className="h-full flex justify-center items-center">
       <form
-        className="mb-24 flex flex-col h-56 w-80 bg-gray-200 px-4 justify-around"
+        className="mb-24 h-1/3 w-1/4 px-8 flex flex-col bg-gray-100 justify-center"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-center">Please Login with admin</h1>
+        <h1 className="text-center mb-4">Please Login with admin</h1>
         <input
-          className="h-10 pl-2"
+          className="h-10 pl-2 mb-4"
           placeholder="username"
           {...register('username')}
         />
         <input
-          className="h-10 pl-2"
+          className="h-10 pl-2 mb-4"
           placeholder="password"
           {...register('password')}
         />
-        <button className="bg-sky-600 py-2">Login</button>
+        <button className="bg-teal-700 py-2 text-white">Login</button>
       </form>
     </section>
   );

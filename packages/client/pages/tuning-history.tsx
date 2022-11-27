@@ -209,7 +209,7 @@ const EDIT_TUNING = gql`
 
 const TuningHistory: NextPage = () => {
   // const client = useApolloClient();
-  const onCompleted = () => { };
+  const onCompleted = () => {};
   const editTuningUpdate: MutationUpdaterFn<EditTuningMutation> = (
     cache,
     result,
@@ -319,7 +319,7 @@ const TuningHistory: NextPage = () => {
   };
   return (
     <div className="ml-2">
-      <h1 className="mt-8 text-xl">Tuning History</h1>
+      <h1 className="mt-6 text-2xl text-center font-bold">Tuning History</h1>
       <form
         className="mt-2 ag-theme-alpine"
         style={{ height: 600, width: '100%' }}
@@ -344,10 +344,10 @@ const TuningHistory: NextPage = () => {
           defaultColDef={defaultColDef} // Default Column Properties
           readOnlyEdit={true}
           onCellEditRequest={onCellEditRequest}
-        // animateRows={true} // Optional - set to 'true' to have rows animate when sorted
-        // rowSelection='multiple' // Options - allows click selection of rows
-        // ref={gridRef}
-        // onSelectionChanged={onSelectionChanged}
+          // animateRows={true} // Optional - set to 'true' to have rows animate when sorted
+          // rowSelection='multiple' // Options - allows click selection of rows
+          // ref={gridRef}
+          // onSelectionChanged={onSelectionChanged}
         />
       </form>
     </div>
