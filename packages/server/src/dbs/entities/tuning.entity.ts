@@ -27,9 +27,9 @@ export class Tuning extends CoreEntity {
   @Column({ type: 'varchar', length: 100, nullable: true })
   ASSIGNEE?: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ type: 'varchar', length: 1, default: 'N' })
-  COMPLETED: string;
+  COMPLETED?: string;
 
   @Field(() => String, { nullable: true })
   @Column({ type: 'longtext', nullable: true })
